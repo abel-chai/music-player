@@ -1,4 +1,0 @@
-
-
-const actions = {}
-const mutations = {}
