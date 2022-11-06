@@ -1,0 +1,42 @@
+mybatis-plus:
+  type-aliases-package: com.example.music_player.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+  global-config:
+    db-config:
+      id-type: auto
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    hiddenmethod:
+      filter:
+        enabled: true #开启页面表单的Rest功能
+  datasource:
+    url: jdbc:mysql://localhost:3306/music_player
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: abel-chai
+    username: root
+    password: 123456
+
+  redis:
+    # redis数据库索引(默认为0)，我们使用索引为3的数据库，避免和其他数据库冲突
+    database: 3
+    # redis服务器地址（默认为loaclhost）
+#    host: 192.168.137.20
+    host: localhost
+    # redis端口（默认为6379）
+    port: 6379
+    # redis连接超时时间（单位毫秒）
+    timeout: 10000
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+
+server:
+  port: 9999
+
+
