@@ -90,6 +90,7 @@
       handleSearch() {
         if(this.query.songName == null | this.query.songName == ''){
           this.$message.error("输入不能为空!")
+          this.query.pageIndex = 1;
           this.getData()
           return
         }

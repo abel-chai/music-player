@@ -187,6 +187,7 @@
 
 <script>
   import {mapState} from 'vuex'
+  import {getBirth} from '../utils/index'
 
   export default {
     name: 'Admin',
@@ -238,6 +239,7 @@
       handleSearch() {
         if(this.query.name == null | this.query.name == ''){
           this.$message.error("输入不能为空!")
+          this.query.pageIndex = 1;
           this.getData()
           return
         }
@@ -266,6 +268,7 @@
       },
       // 保存新增
       saveAdd(admin) {
+        this.admin.birthday = getBirth(this.admin.birthday)
         this.$refs[admin].validate((valid) => {
           if (valid) {
             this.$axios({
@@ -278,6 +281,7 @@
                 if(response.data.type == "success"){
                   this.addVisible = false;
                   this.$message.success(`新增成功`);
+                  this.admin = {};
                   this.getData();
                 }else{
                   this.$message.error(response.data.message);

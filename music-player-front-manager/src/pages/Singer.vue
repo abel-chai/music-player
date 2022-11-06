@@ -250,7 +250,7 @@
             }
           ]"  
         >
-          <el-date-picker type="date" v-model="form.birthday"></el-date-picker>
+          <el-date-picker type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" v-model="form.birthday"></el-date-picker>
         </el-form-item>
         <el-form-item label="简介" prop="intro">
           <el-input type="textarea" v-model="form.intro"></el-input>
@@ -268,6 +268,8 @@
 
 <script>
   import {mapState} from 'vuex'
+  import {getBirth} from '../utils/index'
+
   export default {
     name: 'Singer',
     data() {
@@ -348,6 +350,7 @@
       },
       // 保存编辑
       saveEdit(form) {
+        this.form.birthday = getBirth(this.form.birthday)
         this.$refs[form].validate((valid) => {
           if (valid) {
             this.$axios({
@@ -360,6 +363,7 @@
                 if(response.data.type == "success"){
                   this.editVisible = false;
                   this.$message.success(`修改成功`);
+                  this.form = {};
                   this.getData();
                 }else{
                   this.$message.error(response.data.message);
@@ -376,6 +380,7 @@
       },
       // 保存新增
       saveAdd(singer) {
+        this.singer.birthday = getBirth(this.singer.birthday)
         this.$refs[singer].validate((valid) => {
           if (valid) {
             this.$axios({
@@ -388,6 +393,7 @@
                 if(response.data.type == "success"){
                   this.addVisible = false;
                   this.$message.success(`新增成功`);
+                  this.singer = {};
                   this.getData();
                 }else{
                   this.$message.error(response.data.message);

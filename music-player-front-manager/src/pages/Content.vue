@@ -156,6 +156,7 @@
                 if(response.data.type == "success"){
                   this.addVisible = false;
                   this.$message.success(`新增成功`);
+                  this.form = {};
                   this.getData();
                 }else{
                   this.$message.error(response.data.message);

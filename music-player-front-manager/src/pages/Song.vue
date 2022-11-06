@@ -350,6 +350,7 @@
                 if(response.data.type == "success"){
                   this.editVisible = false;
                   this.$message.success(`修改成功`);
+                  this.form = {};
                   this.getData();
                 }else{
                   this.$message.error(response.data.message);
@@ -387,6 +388,7 @@
                 if(response.data.type == "success"){
                   this.addVisible = false;
                   this.$message.success('新增成功');
+                  this.song = {};
                   this.getData();
                 }else{
                   this.$message.error(response.data.message);
