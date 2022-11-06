@@ -12,7 +12,7 @@
  - 使用springboot作为主体框架
  - 使用mybatis-plus作为连接数据库的框架
  - 使用springsecurity实现用户授权和用户访问控制
- - 使用swagger自动生成接文档
+ - 使用swagger自动生成接口文档
  - 使用redis作为前台页面与后端服务器之间的缓存服务器
 ### 前台用户页面                                       
  - 使用vue3作为主体框架
