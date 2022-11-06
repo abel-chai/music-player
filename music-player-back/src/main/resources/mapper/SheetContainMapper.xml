@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.music_player.mapper.SheetContainMapper">
+    <!--getSheetContainBySid-->
+    <select id="getSheetContainBySid" resultType="java.lang.Integer">
+        SELECT song_id
+        FROM sheet_contain
+        WHERE sheet_id = #{sid}
+    </select>
+</mapper>
