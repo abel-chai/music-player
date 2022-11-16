@@ -87,7 +87,14 @@ public class SheetServiceImpl extends ServiceImpl<SheetMapper, Sheet> implements
     }
 
     @Override
-    public Response getSheet(Integer numOfPage, Integer pageNo, String style) {
+    public Response getSheetByStyle(String style) {
+        QueryWrapper<Sheet> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(!"all".equals(style), "style", style).isNotNull("style");
+        return Response.success("获取成功", sheetMapper.selectList(queryWrapper));
+    }
+
+    @Override
+    public Response getSheetByStylePage(Integer numOfPage, Integer pageNo, String style) {
         Page<Sheet> sheetPage = new Page<>(pageNo, numOfPage);
         QueryWrapper<Sheet> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(!"all".equals(style), "style", style).isNotNull("style");

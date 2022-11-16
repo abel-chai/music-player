@@ -128,24 +128,24 @@ public class SheetContainController {
 
     /**
      * @Author Gary
-     * @Description 搜索歌单的歌曲（带演唱歌手信息）
+     * @Description 搜索歌单的歌曲（通过歌名）（带演唱歌手信息）
      * @Date 21:58 2022/10/31
      * @Version 1.0
      */
     @GetMapping("/search/withSinger/{sheetId}/{name}")
-    @ApiOperation("搜索歌单的歌曲（带演唱歌手信息）")
+    @ApiOperation("搜索歌单的歌曲（通过歌名）（带演唱歌手信息）")
     public Response searchSongSingerBySheet(@PathVariable("sheetId") Integer sheetId, @PathVariable("name") String name) {
         return sheetContainService.searchSongSingerBySheet(sheetId, name);
     }
 
     /**
      * @Author Gary
-     * @Description 搜索歌单的歌曲（带演唱歌手信息）（分页）
+     * @Description 搜索歌单的歌曲（通过歌名）（带演唱歌手信息）（分页）
      * @Date 21:58 2022/10/31
      * @Version 1.0
      */
     @GetMapping("/search/withSinger/{numOfPage}/{pageNo}/{sheetId}/{name}")
-    @ApiOperation("搜索歌单的歌曲（带演唱歌手信息）")
+    @ApiOperation("搜索歌单的歌曲（通过歌名）（带演唱歌手信息）（分页）")
     public Response searchSongSingerBySheetPage(@PathVariable("numOfPage") Integer numOfPage, @PathVariable("pageNo") Integer pageNo, @PathVariable("sheetId") Integer sheetId, @PathVariable("name") String name) {
         return sheetContainService.searchSongSingerBySheetPage(numOfPage, pageNo, sheetId, name);
     }

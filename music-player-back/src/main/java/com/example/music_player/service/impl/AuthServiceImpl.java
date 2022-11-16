@@ -53,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
         //把token响应给前端
         HashMap<String, String> map = new HashMap<>();
         map.put("token", jwt);
+        map.put("id", id);
 
         return Response.success("登陆成功", map);
     }

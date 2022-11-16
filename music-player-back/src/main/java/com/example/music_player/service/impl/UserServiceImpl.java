@@ -150,7 +150,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Response updateClientByCid(User client) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", client.getId()).eq("authority", "client");
-        if (userMapper.selectOne(queryWrapper) != null)
+        if (userMapper.selectOne(queryWrapper) == null)
             return Response.error("更新失败");
         if (userMapper.updateById(client) > 0)
             return Response.error("更新成功");

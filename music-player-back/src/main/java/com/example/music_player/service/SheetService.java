@@ -21,7 +21,9 @@ public interface SheetService extends IService<Sheet> {
 
     Response searchSheetByNamePage(Integer numOfPage, Integer pageNo, String title);
 
-    Response getSheet(Integer numOfPage, Integer pageNo, String style);
+    Response getSheetByStyle(String style);
+
+    Response getSheetByStylePage(Integer numOfPage, Integer pageNo, String style);
 
     Response addSheet(Sheet sheet);
 

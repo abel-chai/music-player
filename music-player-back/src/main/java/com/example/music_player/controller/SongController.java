@@ -138,7 +138,7 @@ public class SongController {
      * @Date 21:12 2022/10/25
      * @Version 1.0
      */
-    @GetMapping("/{name}")
+    @GetMapping("/search/{name}")
     @ApiOperation("搜索歌曲（关键词为歌名）")
     public Response searchSong(@PathVariable("name") String name) {
         return songService.searchSong(name);

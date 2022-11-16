@@ -8,6 +8,6 @@
         SELECT song_id
         FROM my_list_contain
         WHERE client_id = #{cid}
-          AND (type = 0 OR #{type})
+          AND (type = 0 OR type = #{type})
     </select>
 </mapper>
