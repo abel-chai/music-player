@@ -42,4 +42,6 @@ public interface SongService extends IService<Song> {
     Response searchSongPage(Integer numOfPage, Integer pageNo, String name);
 
     Response getSongSingerLikeName(Integer sid, String name);
+
+    Response getTenSong();
 }

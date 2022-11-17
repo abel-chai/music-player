@@ -234,14 +234,40 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
 
         List<Map<String, Object>> list = new ArrayList<>();
         int iter = 1;
-        for (Song song : songMapper.selectList(songQueryWrapper)) {
+        List<Song> songList = songMapper.selectList(songQueryWrapper);
+        for (Song song : songList) {
             if (iter > numOfPage * (pageNo - 1) && iter <= numOfPage * pageNo) {
                 list.add((Map<String, Object>) getSongSinger(song.getId()).getData());
             }
             iter++;
         }
 
-        return Response.success("查询成功", list);
+//        总页数
+        int PageNum;
+        if (songList.size() % numOfPage == 0) {
+            PageNum = songList.size() / numOfPage;
+        } else {
+            PageNum = songList.size() / numOfPage + 1;
+        }
+
+//        总数据条数
+        int totalNum;
+        totalNum = songList.size();
+
+//        是否有前页
+        boolean hasPrevious = pageNo > 1;
+
+//        是否有后页
+        boolean hasNext = pageNo < PageNum;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("songList", list);
+        result.put("totalNum", totalNum);
+        result.put("hasPrevious", hasPrevious);
+        result.put("hasNext", hasNext);
+        result.put("PageNum", PageNum);
+
+        return Response.success("查询成功", result);
     }
 
     @Override
@@ -258,5 +284,24 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
         map.put("singer", singer);
 
         return Response.success("获取成功", map);
+    }
+
+    @Override
+    public Response getTenSong() {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("id").last("limit 10");
+        List<Song> songList = songMapper.selectList(queryWrapper);
+        songList.forEach((x) -> {
+            Map<String, Object> temp = new HashMap<>();
+            QueryWrapper<Singer> singerQueryWrapper = new QueryWrapper<>();
+            singerQueryWrapper.select("singer_name").eq("id", x.getSingerId());
+            temp.put("song", x);
+            temp.put("singerName", singerMapper.selectOne(singerQueryWrapper).getSingerName());
+            result.add(temp);
+        });
+
+        return Response.success("获取成功", result);
     }
 }

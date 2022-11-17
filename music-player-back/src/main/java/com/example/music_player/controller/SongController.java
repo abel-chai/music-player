@@ -180,4 +180,16 @@ public class SongController {
         return Response.success("获取成功", songService.count());
     }
 
+    /**
+     * @Author Gary
+     * @Description 获得最新十个歌曲
+     * @Date 16:47 2022/11/16
+     * @Version 1.0
+     */
+    @GetMapping("/")
+    @ApiOperation("获得最新十个歌曲")
+    public Response getTenSong() {
+        return songService.getTenSong();
+    }
+
 }
