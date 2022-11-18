@@ -1,0 +1,29 @@
+@font-face {
+  font-family: HarmonyOS;
+  src: url("../assets/font/HarmonyOS.ttf")
+}
+
+@font-face {
+  font-family: bold;
+  src: url("../assets/font/bold.ttf")
+}
+
+body {
+  font-family: HarmonyOS;
+}
+
+
+@font-face {
+  font-family: 'iconfont2';  /* Project id 3768126 */
+  src: url('//at.alicdn.com/t/c/font_3768126_c1f3kp503e9.woff2?t=1668338923490') format('woff2'),
+       url('//at.alicdn.com/t/c/font_3768126_c1f3kp503e9.woff?t=1668338923490') format('woff'),
+       url('//at.alicdn.com/t/c/font_3768126_c1f3kp503e9.ttf?t=1668338923490') format('truetype');
+}
+
+.iconfont2 {
+  font-family: "iconfont2" !important;
+  font-size: 30px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
