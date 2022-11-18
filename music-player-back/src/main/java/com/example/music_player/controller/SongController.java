@@ -91,9 +91,21 @@ public class SongController {
      * @Version 1.0
      */
     @GetMapping("/singer/{singerId}")
-    @ApiOperation("取歌手的所有歌曲（通过歌手id）")
+    @ApiOperation("获取歌手的所有歌曲（通过歌手id）")
     public Response getSongBySingerId(@PathVariable("singerId") Integer singerId) {
         return songService.getSongBySingerId(singerId);
+    }
+
+    /**
+     * @Author Gary
+     * @Description 获取歌手的所有歌曲（通过歌手id）（带歌手信息）
+     * @Date 20:28 2022/10/25
+     * @Version 1.0
+     */
+    @GetMapping("/withSinger/{singerId}")
+    @ApiOperation("获取歌手的所有歌曲（通过歌手id）（带歌手信息）")
+    public Response getSongSingerBySingerId(@PathVariable("singerId") Integer singerId) {
+        return songService.getSongSingerBySingerId(singerId);
     }
 
     /**
@@ -138,7 +150,7 @@ public class SongController {
      * @Date 21:12 2022/10/25
      * @Version 1.0
      */
-    @GetMapping("/{name}")
+    @GetMapping("/search/{name}")
     @ApiOperation("搜索歌曲（关键词为歌名）")
     public Response searchSong(@PathVariable("name") String name) {
         return songService.searchSong(name);
@@ -178,6 +190,18 @@ public class SongController {
     @ApiOperation("获取歌曲数量")
     public Response countSong() {
         return Response.success("获取成功", songService.count());
+    }
+
+    /**
+     * @Author Gary
+     * @Description 获得最新十个歌曲
+     * @Date 16:47 2022/11/16
+     * @Version 1.0
+     */
+    @GetMapping("/")
+    @ApiOperation("获得最新十个歌曲")
+    public Response getTenSong() {
+        return songService.getTenSong();
     }
 
 }

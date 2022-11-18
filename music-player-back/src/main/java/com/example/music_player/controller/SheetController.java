@@ -135,13 +135,25 @@ public class SheetController {
     /**
      * @Author Gary
      * @Description 搜索歌单（通过风格）
+     * @Date 15:33 2022/11/15
+     * @Version 1.0
+     */
+    @GetMapping("/style/{style}")
+    @ApiOperation("搜索歌单（通过风格）")
+    public Response getSheetByStyle(@PathVariable("style") String style) {
+        return sheetService.getSheetByStyle(style);
+    }
+
+    /**
+     * @Author Gary
+     * @Description 搜索歌单（通过风格）（分页）
      * @Date 23:47 2022/10/26
      * @Version 1.0
      */
-    @GetMapping("/{numOfPage}/{pageNo}/{style}")
-    @ApiOperation("搜索歌单（通过风格）")
-    public Response getSheet(@PathVariable("numOfPage") Integer numOfPage, @PathVariable("pageNo") Integer pageNo, @PathVariable("style") String style) {
-        return sheetService.getSheet(numOfPage, pageNo, style);
+    @GetMapping("/style/{numOfPage}/{pageNo}/{style}")
+    @ApiOperation("搜索歌单（通过风格）（分页）")
+    public Response getSheetByStylePage(@PathVariable("numOfPage") Integer numOfPage, @PathVariable("pageNo") Integer pageNo, @PathVariable("style") String style) {
+        return sheetService.getSheetByStylePage(numOfPage, pageNo, style);
     }
 
     /**

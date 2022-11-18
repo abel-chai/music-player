@@ -7,6 +7,7 @@ import com.example.music_player.entity.Sheet;
 import com.example.music_player.entity.User;
 import com.example.music_player.mapper.MySheetMapper;
 import com.example.music_player.mapper.SheetMapper;
+import com.example.music_player.mapper.SingerMapper;
 import com.example.music_player.mapper.UserMapper;
 import com.example.music_player.service.MySheetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,17 @@ public class MySheetServiceImpl extends ServiceImpl<MySheetMapper, MySheet> impl
         }
 
         return Response.success("获取成功", map);
+    }
+
+    @Override
+    public Response addSheetBySid(Integer cid, Sheet sheet) {
+        sheet.setImg("/img/sheetImg/default.png");
+        sheetMapper.insert(sheet);
+        MySheet mySheet = new MySheet();
+        mySheet.setSheetId(sheet.getId());
+        mySheet.setClientId(cid);
+        mySheetMapper.insert(mySheet);
+        return Response.success("添加成功");
     }
 
     @Override

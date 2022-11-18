@@ -1,6 +1,7 @@
 package com.example.music_player.controller;
 
 import com.example.music_player.common.Response;
+import com.example.music_player.entity.Sheet;
 import com.example.music_player.service.MySheetService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,5 +54,17 @@ public class MySheetController {
     @ApiOperation("通过歌单id删除")
     public Response delMySheetBySid(@PathVariable("sid") Integer sid) {
         return mySheetService.delMySheetBySid(sid);
+    }
+
+    /**
+     * @Author Gary
+     * @Description 添加自建歌单
+     * @Date 19:15 2022/11/18
+     * @Version 1.0
+     */
+    @PostMapping("/{cid}")
+    @ApiOperation("添加自建歌单")
+    public Response addSheetBySid(@PathVariable("cid") Integer cid, Sheet sheet) {
+        return mySheetService.addSheetBySid(cid, sheet);
     }
 }

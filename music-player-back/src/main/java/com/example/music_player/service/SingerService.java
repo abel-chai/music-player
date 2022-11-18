@@ -32,4 +32,8 @@ public interface SingerService extends IService<Singer> {
     Response deleteSinger(int id);
 
     Response getAllSingerPage(Integer numOfPage, Integer pageNo);
+
+    Response searchSingerSex(String sex);
+
+    Response searchSingerCountry(String country);
 }

@@ -23,6 +23,8 @@ public interface SongService extends IService<Song> {
 
     Response getSongBySingerId(Integer singerId);
 
+    Response getSongSingerBySingerId(Integer singerId);
+
     Response getSongBySingerIdPage(Integer numOfPage, Integer pageNo, Integer singerId);
 
     Response getSong(Integer singerId, String name);
@@ -42,4 +44,6 @@ public interface SongService extends IService<Song> {
     Response searchSongPage(Integer numOfPage, Integer pageNo, String name);
 
     Response getSongSingerLikeName(Integer sid, String name);
+
+    Response getTenSong();
 }

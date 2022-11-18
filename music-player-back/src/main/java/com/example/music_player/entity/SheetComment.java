@@ -30,8 +30,6 @@ public class SheetComment {
 
     private String content;
 
-    private Integer stars;
-
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 

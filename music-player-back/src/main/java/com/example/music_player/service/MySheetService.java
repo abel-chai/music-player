@@ -3,6 +3,7 @@ package com.example.music_player.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.music_player.common.Response;
 import com.example.music_player.entity.MySheet;
+import com.example.music_player.entity.Sheet;
 
 /**
  * @ClassName SongListCollectedService
@@ -17,4 +18,6 @@ public interface MySheetService extends IService<MySheet> {
     Response delMySheetBySid(Integer sid);
 
     Response getMySheetListByCidPage(Integer numOfPage, Integer pageNo, Integer cid);
+
+    Response addSheetBySid(Integer cid, Sheet sheet);
 }
