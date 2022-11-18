@@ -165,4 +165,28 @@ public class SingerController {
     public Response countSinger() {
         return Response.success("获取成功", singerService.count());
     }
+
+    /**
+     * @Author Gary
+     * @Description 搜索歌手（通过歌手性别）
+     * @Date 16:04 2022/11/17
+     * @Version 1.0
+     */
+    @GetMapping("/search/sex/{sex}")
+    @ApiOperation("搜索歌手（通过歌手性别）")
+    public Response searchSingerSex(@PathVariable("sex") String sex) {
+        return singerService.searchSingerSex(sex);
+    }
+
+    /**
+     * @Author Gary
+     * @Description 搜索歌手（通过歌手地区）
+     * @Date 16:04 2022/11/17
+     * @Version 1.0
+     */
+    @GetMapping("/search/country/{country}")
+    @ApiOperation("搜索歌手（通过歌手地区）")
+    public Response searchSingerCountry(@PathVariable("country") String country) {
+        return singerService.searchSingerCountry(country);
+    }
 }

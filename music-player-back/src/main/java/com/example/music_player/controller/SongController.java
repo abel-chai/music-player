@@ -91,9 +91,21 @@ public class SongController {
      * @Version 1.0
      */
     @GetMapping("/singer/{singerId}")
-    @ApiOperation("取歌手的所有歌曲（通过歌手id）")
+    @ApiOperation("获取歌手的所有歌曲（通过歌手id）")
     public Response getSongBySingerId(@PathVariable("singerId") Integer singerId) {
         return songService.getSongBySingerId(singerId);
+    }
+
+    /**
+     * @Author Gary
+     * @Description 获取歌手的所有歌曲（通过歌手id）（带歌手信息）
+     * @Date 20:28 2022/10/25
+     * @Version 1.0
+     */
+    @GetMapping("/withSinger/{singerId}")
+    @ApiOperation("获取歌手的所有歌曲（通过歌手id）（带歌手信息）")
+    public Response getSongSingerBySingerId(@PathVariable("singerId") Integer singerId) {
+        return songService.getSongSingerBySingerId(singerId);
     }
 
     /**

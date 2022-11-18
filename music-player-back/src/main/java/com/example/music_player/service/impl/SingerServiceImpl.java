@@ -177,4 +177,18 @@ public class SingerServiceImpl extends ServiceImpl<SingerMapper, Singer> impleme
         map.put("hasNext", singerPage.hasNext());
         return Response.success("搜索成功", map);
     }
+
+    @Override
+    public Response searchSingerSex(String sex) {
+        QueryWrapper<Singer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("sex", sex);
+        return Response.success("搜索成功", singerMapper.selectList(queryWrapper));
+    }
+
+    @Override
+    public Response searchSingerCountry(String country) {
+        QueryWrapper<Singer> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("location", country);
+        return Response.success("搜索成功", singerMapper.selectList(queryWrapper));
+    }
 }

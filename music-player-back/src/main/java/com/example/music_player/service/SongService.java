@@ -23,6 +23,8 @@ public interface SongService extends IService<Song> {
 
     Response getSongBySingerId(Integer singerId);
 
+    Response getSongSingerBySingerId(Integer singerId);
+
     Response getSongBySingerIdPage(Integer numOfPage, Integer pageNo, Integer singerId);
 
     Response getSong(Integer singerId, String name);

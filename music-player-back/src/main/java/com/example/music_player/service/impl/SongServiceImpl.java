@@ -105,6 +105,16 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
     }
 
     @Override
+    public Response getSongSingerBySingerId(Integer singerId) {
+        Map<String, Object> result = new HashMap<>();
+        QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("singer_id", singerId);
+        result.put("singer", singerMapper.selectById(singerId));
+        result.put("songList", songMapper.selectList(queryWrapper));
+        return Response.success("搜索成功", result);
+    }
+
+    @Override
     public Response getSongBySingerIdPage(Integer numOfPage, Integer pageNo, Integer singerId) {
         Page<Song> songPage = new Page<>(pageNo, numOfPage);
         QueryWrapper<Song> queryWrapper = new QueryWrapper<>();
