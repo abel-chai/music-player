@@ -39,6 +39,8 @@ IDE: IntelliJ IDEA2022.1 $\quad$ vscode $\quad$ Hyper-V $\quad$ Vmware $\quad$ p
 1. 使用git下载项目到本地
 ```
 git@github.com:abel-chai/music-player.git
+or
+git clone https://github.com/abel-chai/music-player.git
 ```
 2. 完成数据库及表的建立并导入相关数据
 3. 修改配置文件
