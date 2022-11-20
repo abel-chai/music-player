@@ -1,20 +1,24 @@
 <template>
   <div class="recommend" v-loading="loading">
     <div class="top-card-wrap">
-      <img src="../../assets/imgs/hoyo.png" class="bg-blur" alt="bg-blur">
+      <img src="../../assets/imgs/jackzhou.jpg" class="bg-blur" alt="bg-blur">
       <div class="top-card">
         <div class="img-wrap">
-          <img src="../../assets/imgs/hoyo.png" alt="img">
+          <img src="../../assets/imgs/jackzhou.jpg" alt="img">
         </div>
         <div class="card-content">
           <div class="card-tag">歌手推荐</div>
-          <div class="card-title">HOYO-MiX</div>
+          <div class="card-title">周杰伦</div>
           <div class="card-info">
-            HOYO-MiX为米哈游（miHoYo）旗下的国人原创音乐团队，主理人为蔡近翰Zoe。团队为米哈游旗下《崩坏学园》、《崩坏学园2》、《崩坏3》、《原神》、《未定事件簿》等游戏项目制作歌曲与配乐，创作的歌曲在国内音乐平台各类榜单、iTunes多国歌曲排行榜中均有不错排名。
-            <br>· 2020年9月20日，《原神》于6月发布的首张OST《原神-风与异乡人 Le Vent et les Enfants des étoiles》获得AppleMusic推荐。
-            <br>· 2020年9月28日，《原神》公测纪念OST-蒙德篇专辑《原神-风与牧歌之城 City of Winds and Idylls》上线网易云音乐及Apple Music，共计收录63首蒙德地区创作的原声音乐。 [13] 
-            <br>· 2020年11月6日， 《原神》璃月篇OST《原神-皎月云间之梦 Jade Moon Upon a Sea of Clouds》上线网易云音乐及Apple Music ，收录69首璃月地区创作的原声音乐，璃月篇精选曲目由伦敦爱乐乐团、上海交响乐团与民乐艺术家演奏，分别于AiRStudios录音棚、上海交响乐团音乐厅完成录制。
-            <br>......
+            外文名：Jay Chou
+            <br>别名：周董、President Chou
+            <br>国籍：中国
+            <br>出生地：台湾省新北市
+            <br>职业：音乐人、制作人、导演、企业家等
+            <br>出生日期：1979年1月18日（农历腊月二十）
+            <br>代表作品：《龙卷风》、《菊花台》、《青花瓷》、《晴天》
+            <br>主要成就：四届世界音乐大奖最畅销亚洲艺人、中华区8次年度销量冠军（最多）、悉尼演唱会票房美国公告牌第二、美国CNN亚洲最具影响力人物、2012年福布斯中国名人榜第一、MTV日本录影带奖亚洲杰出艺人、两届MTV亚洲大奖最受欢迎艺人、连续7年IFPI十大销量国语唱片、华语乐坛十年领袖人物、华语乐坛十年最佳男歌手、中国十大青年领袖、MTV亚洲大奖最受欢迎男歌手、美国MTV电影最佳新人提名、世界十大鬼才音乐人之一、QQ音乐年度盛典最佳全能艺人
+            <br>简介：周杰伦（Jay Chou），1979年1月18日出生于台湾省新北市，华语流行男歌手、演员、词曲创作人、MV及电影导演、编剧及制作人。2000年被吴宗宪发掘，发行首张个人专辑《Jay》。
           </div>
         </div>
       </div>
@@ -31,7 +35,7 @@
                 <ul>
                     <li class="iconfont icon-play" v-for="(item,index) in songLists" :key="index" @click="toPlaylistDetail(item.id)" >
                         <p class="first-p"> </p>
-                        <img v-lazy="$store.state.baseURL+item.img" alt="songLists">
+                        <div class="img" alt="songLists" :style="`background-image: url(${$store.state.baseURL+item.img});`"></div>
                         <p class="last-p">{{item.singerName}}</p>
                     </li>                                                                                                           
                 </ul>
@@ -249,9 +253,12 @@ export default {
         opacity: 1;
   }
 
-  .songs-wrap ul img {
+  .songs-wrap ul .img {
       width: 100%;
+      height: 0;
       border-radius: 5px;
+      padding-bottom: 100%;
+      background-size: 100%;
       /* opacity: 1; */
   }
 

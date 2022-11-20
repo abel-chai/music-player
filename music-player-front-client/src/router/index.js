@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from "vue-router"
 import {userInfoAPI} from '../utils/api.js'
 import store from '../store/index'
+import {Message} from 'element-ui'
 
 Vue.use(VueRouter)
 
@@ -72,8 +73,9 @@ const routes = [
     path: '/register',
     component: () => import ('@/views/Register/Register.vue'),
     beforeEnter: (to, from, next) => {
-      const isLogin = localStorage.getItem('isLogin')
-      isLogin ? next('/user') : next()
+      const { isLogin } = localStorage
+      if(isLogin == 'true') next('/user')
+      else next()
     }
   },
   {
@@ -86,11 +88,13 @@ const routes = [
     beforeEnter: (to, from, next) => {
       const { isLogin } = localStorage;
       if(isLogin === 'true') {
-        console.log("到/user");
         next() 
       }
       else {
-        console.log("到/login");
+        Message({
+          type: 'info',
+          message: '请先登录'
+        });   
         next({name: 'Login'})
       }
     }

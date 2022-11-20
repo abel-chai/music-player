@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { registerAPI } from '@/utils/api'
+import { registerAPI,loginAPI } from '@/utils/api'
 
 export default {
   name: 'Register',
@@ -33,9 +33,30 @@ export default {
   methods: {
     commit() {
       if(this.putData.username === '' || this.putData.password === '') {
-        alert("格式错误")
+        this.$message({
+          type:'error',
+          message:'请输入正确的数据',
+          showClose:true
+        })
       }
-      else registerAPI(this.putData)
+      else registerAPI(this.putData).then(()=>{
+        this.$message({
+          type:'success',
+          message:'注册成功',
+          showClose:true
+        })
+        loginAPI({name: this.putData.username, password: this.putData.password}).then(res=>{
+        this.$store.state.token = res.data.data.token
+        this.type = res.data.type
+        localStorage.uid = res.data.data.id
+      }).then(() => {
+        if(this.type == "success") {
+          localStorage.isLogin = true
+          localStorage.token = this.$store.state.token
+        }
+        this.$router.push('/user')
+      })
+      })
     }
   }
 }

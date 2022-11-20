@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
 import store from "../store/index"
 
 let baseURL = ""
@@ -28,13 +27,6 @@ service.interceptors.response.use(
         }else{
             return Promise.reject(response)
         }
-    },
-    error => {
-        error && Message({
-            type:'error',
-            message:'网络连接出问题了~',
-            showClose:true
-        })
     }
 )
 

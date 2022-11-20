@@ -18,7 +18,7 @@
           <li class="al-item" @click="toMyCollection">
             <div class="al-img-wrap">
               <p class="iconfont icon-play bofang"></p>
-              <img v-lazy="topInfo.picUrl" alt="">
+              <img src="../../assets/imgs/love.png" alt="">
             </div>
             <div class="al-name">我的收藏</div>
           </li>
@@ -43,7 +43,7 @@
             <el-form-item label="歌单简介">
               <el-input v-model="createSonglist.intro" placeholder="请输入歌单的简介"></el-input>
             </el-form-item>
-            <el-form-item label="歌曲风格">
+            <!-- <el-form-item label="歌曲风格">
               <el-radio v-model="createSonglist.style" label="欧美">欧美</el-radio>
               <el-radio v-model="createSonglist.style" label="华语">华语</el-radio>
               <el-radio v-model="createSonglist.style" label="粤语">粤语</el-radio>
@@ -51,7 +51,7 @@
               <el-radio v-model="createSonglist.style" label="BGM">BGM</el-radio>
               <el-radio v-model="createSonglist.style" label="轻音乐">轻音乐</el-radio>
               <el-radio v-model="createSonglist.style" label="乐器">乐器</el-radio>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
           <center>
             <div class="button">
@@ -76,21 +76,21 @@
             </el-descriptions-item>
             <el-descriptions-item>
               <template slot="label">
-                <i class="el-icon-mobile-phone"></i>
+                <i class="el-icon-s-check"></i>
                 签名
               </template>
               {{info.signature}}
             </el-descriptions-item>
             <el-descriptions-item>
               <template slot="label">
-                <i class="el-icon-location-outline"></i>
+                <i class="el-icon-mobile-phone"></i>
                 电话
               </template>
               {{info.phone}}
             </el-descriptions-item>
             <el-descriptions-item>
               <template slot="label">
-                <i class="el-icon-office-building"></i>
+                <i class="el-icon-takeaway-box"></i>
                 邮箱
               </template>
               {{info.email}}
@@ -98,19 +98,19 @@
           </el-descriptions>
           <el-form label-position="left" label-width="80px" :model="putInfo" v-if="canChange">
             <el-form-item label="用户名">
-              <el-input v-model="putInfo.username" :placeholder="info.username"></el-input>
+              <el-input v-model="putInfo.username" ></el-input>
             </el-form-item>
             <el-form-item label="密码">
               <el-input v-model="putInfo.password" show-password></el-input>
             </el-form-item>
             <el-form-item label="签名">
-              <el-input v-model="putInfo.signature" :placeholder="info.signature"></el-input>
+              <el-input v-model="putInfo.signature"></el-input>
             </el-form-item>
             <el-form-item label="手机号">
-              <el-input v-model="putInfo.phone" :placeholder="info.phone"></el-input>
+              <el-input v-model="putInfo.phone"></el-input>
             </el-form-item>
             <el-form-item label="邮箱">
-              <el-input v-model="putInfo.email" :placeholder="info.email"></el-input>
+              <el-input v-model="putInfo.email"></el-input>
             </el-form-item>
             <center>
               <div class="button">
@@ -155,7 +155,7 @@ export default {
           createSonglist: {
             title: '',
             intro: '',
-            style: ''
+            // style: ''
           },
           canChange: false
       }
@@ -262,6 +262,10 @@ export default {
                   desc:res.data.data.signature,
               }
               this.info = res.data.data
+              this.putInfo.username = this.info.username
+              this.putInfo.signature = this.info.signature
+              this.putInfo.phone = this.info.phone
+              this.putInfo.email = this.info.email
               this.$store.state.userImg = this.$store.state.baseURL+res.data.data.img
           }).then(()=>{
               this.loading = false

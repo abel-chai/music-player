@@ -42,7 +42,7 @@
                                 </template>
                             </el-table-column>     
 
-                            <el-table-column prop="songName" label="音乐标题" width=""></el-table-column>
+                            <el-table-column prop="songName" label="歌曲" width=""></el-table-column>
 
                             <el-table-column label="歌手" width="">  
                                 <template slot-scope="scope">
@@ -50,9 +50,9 @@
                                     <span style="cursor:pointer;color:#2980b9;">{{playlistInfo.singerName}}</span>
                                 </template>                                                          
                             </el-table-column>    
-                            <el-table-column width="">  
+                            <el-table-column width="" label="操作">  
                                 <template slot-scope="scope">
-                                    <span style="top:20px;" title="添加到歌单">
+                                    <span style="top:20px;margin-left: -10px;" title="添加到歌单">
                                         <el-popover
                                             placement="right"
                                             width="100"
@@ -139,6 +139,21 @@ export default {
             })
         },
         addToCollection(row) {
+            if (localStorage.isLogin != 'true') {
+                this.$confirm('收藏歌曲需要登录, 是否前往登录?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    this.$router.push('/login')
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });          
+                });
+                return
+            }
             const params = {
                 clientId: localStorage.uid,
                 songId: row.song.id,
