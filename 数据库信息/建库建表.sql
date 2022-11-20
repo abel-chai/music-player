@@ -35,7 +35,7 @@ CREATE TABLE `banner`  (
 -- Records of banner
 -- ----------------------------
 INSERT INTO `banner` VALUES (1, '/img/bannerImg/1.jpg');
-INSERT INTO `banner` VALUES (2, '/img/bannerImg/2.jpeg');
+INSERT INTO `banner` VALUES (2, '/img/bannerImg/2.jpg');
 INSERT INTO `banner` VALUES (3, '/img/bannerImg/3.jpg');
 INSERT INTO `banner` VALUES (4, '/img/bannerImg/4.jpg');
 INSERT INTO `banner` VALUES (5, '/img/bannerImg/5.jpg');
