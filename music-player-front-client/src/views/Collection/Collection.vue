@@ -35,10 +35,10 @@
                               </template>
                           </el-table-column>     
 
-                          <el-table-column prop="song.songName" label="音乐标题" width=""></el-table-column>
+                          <el-table-column prop="song.songName" label="歌曲" width=""></el-table-column>
                           <el-table-column prop="singer.singerName" label="歌手" width="">  
                               <template slot-scope="scope">
-                                  <span style="cursor:pointer;color:#2980b9;">{{scope.row.singer.singerName}}</span>                                                          
+                                  <span style="cursor:pointer;color:#2980b9;" @click="$router.push(`/artist?artistId=${scope.row.singer.id}`)">{{scope.row.singer.singerName}}</span>                                                          
                                   <span class="plus" title="取消收藏" @click="dropFromCollection(scope.row)" style="top:20px;color:red;">❤</span>
                               </template>
                           </el-table-column>                            

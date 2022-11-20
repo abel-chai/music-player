@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <h2>Afterglow</h2>
+    <h2 style="color:white;">music-player</h2>
     <div class="btns">
       <i class="el-icon-arrow-left" @click="go(-1)"></i>
       <i class="el-icon-arrow-right" @click="go(1)"></i>      
@@ -106,7 +106,7 @@ export default {
   display: flex;
   align-items: center;
   background-color: #000000;
-  padding: 0 35px;
+  padding: 0 30px;
   border-bottom: 1px solid #e8e8e8;
 }
 
@@ -243,6 +243,6 @@ export default {
   display: flex;
   position: absolute;
   top: 10px;
-  right: 60px;
+  right: 30px;
 }
 </style>

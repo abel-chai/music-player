@@ -16,7 +16,7 @@
 
                             <el-table-column type="index" width="50"></el-table-column>    
 
-                            <el-table-column prop="songName" label="音乐标题" width="">
+                            <el-table-column prop="songName" label="歌曲" width="">
                                 <template slot-scope="scope">
                                     <span>{{scope.row.songName}}</span>    
                                 </template>
@@ -28,9 +28,9 @@
                                     <span style="cursor:pointer;color:#2980b9;display:inline-block" @click="toArtist(scope.row.artistid)">{{scope.row.artistInfo}}</span>                                    
                                 </template>                                  
                             </el-table-column> 
-                            <el-table-column width="">  
+                            <el-table-column width="" label="操作">  
                                 <template slot-scope="scope">
-                                    <span style="top:20px;" title="添加到歌单">
+                                    <span style="top:20px</ul>;" title="添加到歌单">
                                         <el-popover
                                             placement="right"
                                             width="100"
@@ -52,8 +52,8 @@
                             <ul>
                                 <li class="iconfont icon-play" v-for="(item,index) in playList" :key="index" @click="toPlaylistDetail(item.id)">
                                     <p class="first-p"></p>
-                                    <img v-lazy="item.coverImgUrl" alt="recommend">
-                                    <p class="last-p" :title="item.name">{{item.name}}</p>
+                                    <img v-lazy="item.img" alt="recommend">
+                                    <p class="last-p" :title="item.title">{{item.title}}</p>
                                 </li>                                                                                                                    
                             </ul>
                         </div>
@@ -115,7 +115,21 @@ export default {
             })
         },
         addToCollection(row) {
-            console.log(row);
+            if (localStorage.isLogin != 'true') {
+                this.$confirm('收藏歌曲需要登录, 是否前往登录?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    this.$router.push('/login')
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });          
+                });
+                return
+            }
             const params = {
                 clientId: localStorage.uid,
                 songId: row.id,
@@ -215,13 +229,13 @@ export default {
                         break
                     case 1000:
                         resultList = res.data.data
-                        // 点击最后几页返回的songCount为10会出现bug
                         if(this.total == 0)
                             this.total = res.data.data.length
-                        this.playList = resultList   
+                        this.playList = resultList    
                         for(let item of this.playList) {
-                            item.coverImgUrl = this.$store.state.baseURL+item.coverImgUrl
-                        }                      
+                            item.img = this.$store.state.baseURL+item.img
+                        }          
+                        console.log(this.playList);            
                         break
                 }
             }).then(()=>{

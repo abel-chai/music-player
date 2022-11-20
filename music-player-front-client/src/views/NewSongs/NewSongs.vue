@@ -19,7 +19,7 @@
 
           </el-table-column>     
 
-          <el-table-column prop="songName" label="音乐标题" width=""></el-table-column>
+          <el-table-column prop="songName" label="歌曲" width=""></el-table-column>
 
                             <el-table-column label="歌手" width="">
                                 <template slot-scope="scope">

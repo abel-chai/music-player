@@ -8,7 +8,7 @@
             </el-carousel>            
         </div>
         <div class="songs-wrap">
-            <h4>推荐歌单</h4>
+            <h4 style="font-size:21px;">推荐歌单</h4>
             <div class="list">
                 <ul>
                     <li class="iconfont icon-play" v-for="(item,index) in recommendList" :key="index" @click="toPlaylistDetail(item.id)">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="songs-wrap">
-            <h4>最新音乐</h4>
+            <h4 style="font-size:21px;">最新音乐</h4>
             <ul class="new-songs">
                 <li v-for="(item,index) in newSongs" :key="index">
                     <div class="music-img-wrap">

@@ -44,24 +44,24 @@
                                 </template>
                             </el-table-column>     
 
-                            <el-table-column prop="song.songName" label="音乐标题" width=""></el-table-column>
+                            <el-table-column prop="song.songName" label="歌曲" width=""></el-table-column>
                             <el-table-column prop="singer.singerName" label="歌手" width="">  
                                 <template slot-scope="scope">
                                     <!-- todo -->
                                     <span class="plus" style="top:20px;" title="收藏歌曲" @click="addToCollection(scope.row,$event)">+</span>
                                     
-                                    <span style="cursor:pointer;color:#2980b9;">{{scope.row.singer.singerName}}</span>                                                          
+                                    <span style="cursor:pointer;color:#2980b9;" @click="$router.push(`/artist?artistId=${scope.row.singer.id}`)">{{scope.row.singer.singerName}}</span>                                                          
                                     <!-- <span class="plus" title="收藏歌曲" @click="addToCollection(scope.row,$event)" style="top:20px">+</span> -->
                                 </template>
                             </el-table-column>   
-                            <el-table-column width="">  
+                            <el-table-column width="" label="操作">  
                                 <template slot-scope="scope">
-                                    <span style="top:20px;" title="添加到歌单">
+                                    <span style="top:20px;margin-left: -10px;" title="添加到歌单">
                                         <el-popover
                                             placement="right"
                                             width="100"
                                             trigger="click">
-                                            <p v-for="(item,i) in getData" :key="i" @click="addToMyList(scope.row,i)">{{item.title}}</p>
+                                            <p v-for="(item,i) in getData" :key="i" @click="addToMyList(scope.row,i)" style="cursor: pointer;">{{item.title}}</p>
                                             <el-button slot="reference">添加到歌单</el-button>
                                         </el-popover>
                                     </span>
@@ -179,6 +179,21 @@ export default {
             })
         },
         addToCollection(row) {
+            if (localStorage.isLogin != 'true') {
+                this.$confirm('收藏歌曲需要登录, 是否前往登录?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    this.$router.push('/login')
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });          
+                });
+                return
+            }
             const params = {
                 clientId: localStorage.uid,
                 songId: row.song.id,
@@ -206,6 +221,14 @@ export default {
                             message: '已取消'
                         });          
                 });
+                return
+            }
+            if(this.textarea === '') {
+                this.$message({
+                    type: 'info',
+                    message: '请输入内容'
+                });  
+                return
             }
             putCommentAPI({
                 clientId: localStorage.uid,
@@ -553,7 +576,7 @@ export default {
   .comment-user {
     color: #517eaf;
     margin-right: 10px;
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 
   .comment-content {

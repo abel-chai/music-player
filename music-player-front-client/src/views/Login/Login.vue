@@ -32,11 +32,7 @@ export default {
   methods: {
     commit() {
       loginAPI({name: this.uname, password: this.pword}).then(res=>{
-        this.$store.state.token = res.data.data.token
-        this.type = res.data.type
-        localStorage.uid = res.data.data.id
-      }).then(() => {
-        if(this.type == "success") {
+        if(res.data.type == "success") {
           localStorage.isLogin = true
           localStorage.token = this.$store.state.token
           this.$router.push('/user')
@@ -51,7 +47,12 @@ export default {
               message: '登录失败',
               type: 'error'
           });
+          return
         }
+        this.$store.state.token = res.data.data.token
+        this.type = res.data.type
+        localStorage.uid = res.data.data.id
+        
       })
       
     }
