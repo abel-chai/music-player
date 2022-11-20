@@ -38,7 +38,7 @@
                             <el-table-column width="100">
                                 <template slot-scope="scope">
                                 <div class="img-wrap">
-                                    <img v-lazy="scope.row.song.img" alt="">
+                                    <img v-lazy="$store.state.baseURL+scope.row.song.img" alt="">
                                     <p class="iconfont icon-play"  @click="play(scope.row)"></p>                                
                                 </div>                                
                                 </template>
@@ -47,10 +47,26 @@
                             <el-table-column prop="song.songName" label="音乐标题" width=""></el-table-column>
                             <el-table-column prop="singer.singerName" label="歌手" width="">  
                                 <template slot-scope="scope">
+                                    <!-- todo -->
+                                    <span class="plus" style="top:20px;" title="收藏歌曲" @click="addToCollection(scope.row,$event)">+</span>
+                                    
                                     <span style="cursor:pointer;color:#2980b9;">{{scope.row.singer.singerName}}</span>                                                          
-                                    <span class="plus" title="收藏歌曲" @click="addToCollection(scope.row,$event)" style="top:20px">+</span>
+                                    <!-- <span class="plus" title="收藏歌曲" @click="addToCollection(scope.row,$event)" style="top:20px">+</span> -->
                                 </template>
-                            </el-table-column>                            
+                            </el-table-column>   
+                            <el-table-column width="">  
+                                <template slot-scope="scope">
+                                    <span style="top:20px;" title="添加到歌单">
+                                        <el-popover
+                                            placement="right"
+                                            width="100"
+                                            trigger="click">
+                                            <p v-for="(item,i) in getData" :key="i" @click="addToMyList(scope.row,i)">{{item.title}}</p>
+                                            <el-button slot="reference">添加到歌单</el-button>
+                                        </el-popover>
+                                    </span>
+                                </template> 
+                            </el-table-column>                        
                         </el-table>
                     </div>                    
                 </el-tab-pane>
@@ -70,10 +86,10 @@
                                 <el-button icon="el-icon-edit" circle @click="commit"></el-button>
                             </div>
                         </div>
-                        <h4 class="comment-title">最新评论</h4>
+                        <h4 class="comment-title">所有评论</h4>
                         <ul>
                             <li v-for="(item,index) in comments" :key="index">
-                                <img v-lazy="item.client.img" alt="" class="comment-avatar">
+                                <img v-lazy="$store.state.baseURL+item.client.img" alt="" class="comment-avatar">
                                 <div class="comment-info">
                                     <div class="comment">
                                         <span class="comment-user">{{item.client.username}}</span>
@@ -95,9 +111,8 @@
 </template>
 
 <script>
-import {formatDateFully} from '../../utils/utils'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
-import { playlistDetailAPI,commentsAPI,putCommentAPI,addToCollectionAPI } from '@/utils/api'
+import { playlistDetailAPI,commentsAPI,putCommentAPI,addToCollectionAPI,userSongsAPI,addToListAPI } from '@/utils/api'
 
 export default {
     data(){
@@ -117,7 +132,8 @@ export default {
             allData:[],
             showAddBall:false,
             songList: [],
-            textarea: ''
+            textarea: '',
+            getData: [],
         }
     },
     components: {
@@ -147,10 +163,26 @@ export default {
         }        
     },
     methods:{
+        addToMyList(row,i){
+            const params = {
+                id: this.getData[i].id,
+                singerName: row.singer.singerName,
+                songName: row.song.songName
+            }
+            console.log(i);
+            addToListAPI(params).then(()=>{
+                this.$message({
+                    showClose: true,
+                    message: '添加成功',
+                    type: 'success'
+                });
+            })
+        },
         addToCollection(row) {
             const params = {
-                clientId: this.$store.state.uid,
-                songId: row.song.id
+                clientId: localStorage.uid,
+                songId: row.song.id,
+                type: 1
             }
             addToCollectionAPI(params)
             this.$message({
@@ -161,11 +193,38 @@ export default {
         },
         //todo,传入用户id、歌单id和评论内容
         commit() {
-            console.log(this.textarea);
+            if(localStorage.isLogin != 'true') {
+                this.$confirm('发表评论需要登录, 是否前往登录?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    this.$router.push('/login')
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });          
+                });
+            }
             putCommentAPI({
-                clientId: this.$store.state.uid,
+                clientId: localStorage.uid,
                 sheetId: this.playlistId,
                 content: this.textarea
+            }).then(() =>{
+                this.loading = true
+                let params = this.playlistId
+                commentsAPI(params).then(res=>{
+                    console.log(res)
+                    this.comments = res.data.data
+                }).then(()=>{
+                    this.$message({
+                        showClose: true,
+                        message: '评论成功',
+                        type: 'success'
+                    });
+                })
+                this.loading = false
             })
         },
         toArtist(id){
@@ -204,6 +263,7 @@ export default {
         getTableData(){
             playlistDetailAPI(this.playlistId).then(res=>{
                 this.playlistInfo = res.data.data.sheet
+                this.playlistInfo.img = this.$store.state.baseURL+this.playlistInfo.img
                 this.songList = res.data.data.songList
                 
                 Promise.all([this.getTracks(false),this.getComments(true)]).then(()=>{
@@ -212,6 +272,10 @@ export default {
 
             }).then(()=>{
                 this.loading = false
+            })
+            userSongsAPI(localStorage.uid).then(res=>{
+                this.getData = res.data.data.sheetList
+                console.log((this.getData));
             })
         },                
         getTracks(all=false){
@@ -249,21 +313,11 @@ export default {
             }
             this.$store.commit("changeNowIndex",ids.indexOf(musicInfo.id))
         },        
-        getComments(isFirst=false){
+        getComments(){
             this.loading = true
             let params = this.playlistId
             commentsAPI(params).then(res=>{
                 console.log(res)
-
-                if(isFirst){
-                    if(Object.prototype.hasOwnProperty.call(res.data,'hotComments')){
-                        for(let item of res.data.hotComments){
-                            item.time = formatDateFully(new Date(item.time))
-                        }
-                        this.hotComments = res.data.hotComments
-                    }              
-                }
-
                 this.comments = res.data.data
             })
 

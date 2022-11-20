@@ -18,14 +18,28 @@
 
                             <el-table-column prop="songName" label="音乐标题" width="">
                                 <template slot-scope="scope">
-                                    <span>{{scope.row.songName}}</span>
+                                    <span>{{scope.row.songName}}</span>    
                                 </template>
                             </el-table-column>
 
                             <el-table-column prop="artistInfo" label="歌手" width="">
                                 <template slot-scope="scope">
-                                    <div style="cursor:pointer;color:#2980b9;display:inline-block" @click="toArtist(scope.row.artistid)">{{scope.row.artistInfo}}</div>                                    
+                                    <span class="plus" style="top:15px;" title="收藏歌曲" @click="addToCollection(scope.row,$event)">+</span>
+                                    <span style="cursor:pointer;color:#2980b9;display:inline-block" @click="toArtist(scope.row.artistid)">{{scope.row.artistInfo}}</span>                                    
                                 </template>                                  
+                            </el-table-column> 
+                            <el-table-column width="">  
+                                <template slot-scope="scope">
+                                    <span style="top:20px;" title="添加到歌单">
+                                        <el-popover
+                                            placement="right"
+                                            width="100"
+                                            trigger="click">
+                                            <p v-for="(item,i) in getData" :key="i" @click="addToMyList(scope.row,i)">{{item.title}}</p>
+                                            <el-button slot="reference">添加到歌单</el-button>
+                                        </el-popover>
+                                    </span>
+                                </template> 
                             </el-table-column> 
                         </el-table>                        
                     </div>
@@ -45,16 +59,15 @@
                         </div>
                     </div>                    
                 </el-tab-pane>
+                
             </el-tabs>            
         </div>
-        <Pagination :total="total" :pageSize="pageSize" :nowPage="page" @changePage="handleCurrentChange"/>
         <div class="add-ball iconfont icon-yinfu" v-show="showAddBall" ref="addBall"></div>  
     </div>
 </template>
 
 <script scoped>
-import { searchAPI } from '@/utils/api'
-import Pagination from '@/components/Pagination.vue'
+import { searchAPI,addToCollectionAPI,userSongsAPI,addToListAPI } from '@/utils/api'
 
 export default {
     data(){
@@ -70,11 +83,11 @@ export default {
             type:1,
             loading:true,
             showAddBall:false,
-            musicURL: ''
+            musicURL: '',
+            getData: []
         }
     },
     components: {
-        Pagination
     },
     computed:{
         musicQueue(){
@@ -84,7 +97,37 @@ export default {
             return this.$store.state.queuePos
         }
     },
-    methods:{            
+    methods:{     
+        addToMyList(row,i){
+            console.log(row);
+            const params = {
+                id: this.getData[i].id,
+                singerName: row.artistInfo,
+                songName: row.songName
+            }
+            console.log(i);
+            addToListAPI(params).then(()=>{
+                this.$message({
+                    showClose: true,
+                    message: '添加成功',
+                    type: 'success'
+                });
+            })
+        },
+        addToCollection(row) {
+            console.log(row);
+            const params = {
+                clientId: localStorage.uid,
+                songId: row.id,
+                type: 1
+            }
+            addToCollectionAPI(params)
+            this.$message({
+                showClose: true,
+                message: '收藏成功',
+                type: 'success'
+            });
+        },       
         toPlaylistDetail(id){
             this.$router.push(`/playlist?id=${id}`)
         },
@@ -115,6 +158,8 @@ export default {
             }
         },
         play(row){
+            console.log('row');
+            console.log(row);
             let id = row.pid
             this.songUrl = this.songsList[id].url
 
@@ -149,6 +194,7 @@ export default {
                 switch(type){
                     case 1:
                         resultList = res.data.data
+                        console.log(resultList);
                         if(this.total == 0)
                             this.total = res.data.data.length
                         var songsList = []
@@ -160,6 +206,7 @@ export default {
                                 artistInfo:resultList[index].singer.singerName,
                                 imgUrl:resultList[index].song.img,
                                 artistid: resultList[index].singer.id,
+                                url:resultList[index].song.url,
                                 pid: index
                             }
                             songsList.push(song)
@@ -171,12 +218,18 @@ export default {
                         // 点击最后几页返回的songCount为10会出现bug
                         if(this.total == 0)
                             this.total = res.data.data.length
-                        this.playList = resultList                         
+                        this.playList = resultList   
+                        for(let item of this.playList) {
+                            item.coverImgUrl = this.$store.state.baseURL+item.coverImgUrl
+                        }                      
                         break
                 }
             }).then(()=>{
                 this.loading = false
             })  
+            userSongsAPI(localStorage.uid).then(res=>{
+                this.getData = res.data.data.sheetList
+            })
         },
         beginAnimation(x,y){
             this.showAddBall = true

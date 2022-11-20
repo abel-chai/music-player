@@ -38,7 +38,7 @@
                           <el-table-column width="100">
                               <template slot-scope="scope">
                               <div class="img-wrap">
-                                  <img v-lazy="scope.row.song.img" alt="">
+                                  <img v-lazy="$store.state.baseURL+scope.row.song.img" alt="">
                                   <p class="iconfont icon-play"  @click="play(scope.row)"></p>                                
                               </div>                                
                               </template>
@@ -48,46 +48,11 @@
                           <el-table-column prop="singer.singerName" label="歌手" width="">  
                               <template slot-scope="scope">
                                   <span style="cursor:pointer;color:#2980b9;">{{scope.row.singer.singerName}}</span>                                                          
-                                  <span class="plus" title="取消收藏" @click="dropFromCollection(scope.row,$event)" style="top:20px">-</span>
+                                  <!-- <span class="plus" title="从歌单中移除" @click="dropFromCollection(scope.row,$event)" style="top:20px;color:red;">❤</span> -->
                               </template>
                           </el-table-column>                            
                       </el-table>
                   </div>                    
-              </el-tab-pane>
-              <el-tab-pane :label="`评论(${comments.length})`" name="second">
-
-                  <div class="comment-wrap">
-                      <h4 class="comment-title">发表评论</h4>
-                      <div style="padding:0 800px 0 0;">
-                          <el-input
-                          type="textarea"
-                          :rows="2"
-                          placeholder="发表你的想法"
-                          v-model="textarea"
-                          style="margin-bottom: 5px;">
-                          </el-input>
-                          <div style="display:flex;justify-content:flex-end;">
-                              <el-button icon="el-icon-edit" circle @click="commit"></el-button>
-                          </div>
-                      </div>
-                      <h4 class="comment-title">最新评论</h4>
-                      <ul>
-                          <li v-for="(item,index) in comments" :key="index">
-                              <img v-lazy="item.client.img" alt="" class="comment-avatar">
-                              <div class="comment-info">
-                                  <div class="comment">
-                                      <span class="comment-user">{{item.client.username}}</span>
-                                      
-                                  </div>
-                                  <div class="comment-bottom">
-                                      <span class="comment-content">{{item.content}}</span>
-                                  </div>
-                              </div>
-                          </li>
-                      </ul>
-                  </div>
-
-
               </el-tab-pane>
           </el-tabs>     
       </div>
@@ -155,7 +120,7 @@ export default {
       commit() {
           console.log(this.textarea);
           putCommentAPI({
-              clientId: this.$store.state.uid,
+              clientId: localStorage.uid,
               sheetId: this.playlistId,
               content: this.textarea
           })
@@ -196,6 +161,7 @@ export default {
       getTableData(){
           playlistDetailAPI(this.playlistId).then(res=>{
               this.playlistInfo = res.data.data.sheet
+              this.playlistInfo.img = this.$store.state.baseURL+this.playlistInfo.img
               this.songList = res.data.data.songList
               
               Promise.all([this.getTracks(false),this.getComments(true)]).then(()=>{

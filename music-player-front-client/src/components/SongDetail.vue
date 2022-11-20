@@ -6,7 +6,7 @@
                 <div class="img-box">
                     <img :src="playerBar" alt="" :class="{'player-bar isplay':!isMusicPaused,'player-bar':isMusicPaused}">
                     <div class="img-wrap-rotate">
-                        <img :src="globalMusicInfo.imgUrl?globalMusicInfo.imgUrl:defaultImgUrl" alt="" :class="{'running':!isMusicPaused,'paused':isMusicPaused}" crossorigin="anonymous" ref="cover">
+                        <img :src="globalMusicInfo.imgUrl?$store.state.baseURL+globalMusicInfo.imgUrl:defaultImgUrl" alt="" :class="{'running':!isMusicPaused,'paused':isMusicPaused}" crossorigin="anonymous" ref="cover">
                     </div>
                 </div>
                 

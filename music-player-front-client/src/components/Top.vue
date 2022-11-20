@@ -105,7 +105,7 @@ export default {
 .header {
   display: flex;
   align-items: center;
-  background-color: #fff;
+  background-color: #000000;
   padding: 0 35px;
   border-bottom: 1px solid #e8e8e8;
 }

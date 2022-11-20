@@ -18,7 +18,9 @@ const store = new Vuex.Store({
         isLogin: false,
         uid: '',
         token: '',
-        userImg: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+        userImg: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+        baseURL: '',
+        showBotton: false
     },
     mutations
 })

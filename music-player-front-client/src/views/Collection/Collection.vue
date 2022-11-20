@@ -2,12 +2,12 @@
   <div class="playlist"  v-loading="loading">
     <div class="artist-info">
       <div class="artist-img-wrap">
-        <img v-lazy="topInfo.picUrl" alt="">
+        <img v-lazy="playlistInfo.img" alt="">
       </div>
       <div class="artist-others">
-        <div class="artist-name">{{topInfo.name}}</div>
+        <div class="artist-name">{{playlistInfo.username}}</div>
         <div class="artsit-works">
-          <div class="artist-works-count">{{topInfo.desc}}</div>
+          <div class="artist-works-count">{{playlistInfo.signature}}</div>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
                           <el-table-column width="100">
                               <template slot-scope="scope">
                               <div class="img-wrap">
-                                  <img v-lazy="scope.row.song.img" alt="">
+                                  <img v-lazy="$store.state.baseURL+scope.row.song.img" alt="">
                                   <p class="iconfont icon-play"  @click="play(scope.row)"></p>                                
                               </div>                                
                               </template>
@@ -39,7 +39,7 @@
                           <el-table-column prop="singer.singerName" label="歌手" width="">  
                               <template slot-scope="scope">
                                   <span style="cursor:pointer;color:#2980b9;">{{scope.row.singer.singerName}}</span>                                                          
-                                  <span class="plus" title="取消收藏" @click="dropFromCollection(scope.row,$event)" style="top:20px">-</span>
+                                  <span class="plus" title="取消收藏" @click="dropFromCollection(scope.row)" style="top:20px;color:red;">❤</span>
                               </template>
                           </el-table-column>                            
                       </el-table>
@@ -52,7 +52,7 @@
 
 <script>
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
-import { userInfoAPI,playlistDetailAPI } from '@/utils/api'
+import { myCollectionAPI,dropFromCollectionAPI } from '@/utils/api'
 
 export default {
   data(){
@@ -70,7 +70,6 @@ export default {
           allData:[],
           showAddBall:false,
           songList: [],
-          topInfo: {}
       }
   },
   components: {
@@ -101,8 +100,19 @@ export default {
   },
   methods:{
       //todo
-      dropFromCollection() {
-          
+      dropFromCollection(row) {
+        const params = { cid: localStorage.uid, sid: row.song.id}
+        dropFromCollectionAPI(params).then(()=>{
+            myCollectionAPI(localStorage.uid).then(res=>{
+              this.songList = res.data.data.songList
+            })
+            this.$message({
+                showClose: true,
+                message: '已取消收藏',
+                type: 'success'
+            });
+            this.$router.go(0)
+        })
       },
       toArtist(id){
           this.$router.push(`/artist?artistId=${id}`)
@@ -137,8 +147,9 @@ export default {
           }, 500);
       },                
       getTableData(){
-          playlistDetailAPI(this.playlistId).then(res=>{
-              this.playlistInfo = res.data.data.sheet
+        myCollectionAPI(localStorage.uid).then(res=>{
+              this.playlistInfo = res.data.data.client
+              this.playlistInfo.img = this.$store.state.baseURL+this.playlistInfo.img
               this.songList = res.data.data.songList
               
               Promise.all([this.getTracks(false)]).then(()=>{
@@ -147,16 +158,6 @@ export default {
 
           }).then(()=>{
               this.loading = false
-          })
-          userInfoAPI(this.artistId).then(res=>{
-              console.log(res)
-              this.topInfo = {
-                  name:res.data.data.username,
-                  picUrl:res.data.data.img,
-                  desc:res.data.data.signature,
-              }
-              this.info = res.data.data
-              this.$store.state.userImg = res.data.data.img
           })
       },                
       getTracks(all=false){

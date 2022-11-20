@@ -33,11 +33,12 @@ export default {
     commit() {
       loginAPI({name: this.uname, password: this.pword}).then(res=>{
         this.$store.state.token = res.data.data.token
-        this.$store.state.uid = res.data.data.id
         this.type = res.data.type
+        localStorage.uid = res.data.data.id
       }).then(() => {
         if(this.type == "success") {
-          this.$store.state.isLogin = true
+          localStorage.isLogin = true
+          localStorage.token = this.$store.state.token
           this.$router.push('/user')
           this.$message({
               showClose: true,
@@ -65,7 +66,7 @@ export default {
   height: 500px;
   border-radius: 30px;
   border-top: 1px solid #e8e8e8;
-  background: url(../../assets/imgs/lan.png) no-repeat;
+  background: url(../../assets/imgs/moka.png) no-repeat;
   background-size: 40%;
   background-position: bottom right;
   box-shadow: 0 5px 6px rgba(0, 0, 0,.3);

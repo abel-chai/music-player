@@ -33,7 +33,7 @@
                 <ul>
                     <li class="iconfont icon-play" v-for="(item,index) in songLists" :key="index" @click="toPlaylistDetail(item.id)" >
                         <p class="first-p"></p>
-                        <img v-lazy="item.img" alt="songLists">
+                        <img v-lazy="$store.state.baseURL+item.img" alt="songLists">
                         <p class="last-p">{{item.title}}</p>
                     </li>                                                                                                                    
                 </ul>
@@ -71,7 +71,7 @@ export default {
     getSongLists(style=''){
       this.loading = true
       let url = ''
-      if(style != '' && style != '全部') url = `/style/${style}`
+      if(style != '' && style != '全部') url = `style/${style}`
       recommendSonglistAPI(url).then(res=>{
         this.songLists = res.data.data
         this.total = res.data.data.length /* 改变总页数 */  

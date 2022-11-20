@@ -1,9 +1,10 @@
 <template>
+<transition name="el-zoom-in-bottom">
   <div class="bottom">
     <div class="music-box">
     <!-- onselectstart="return false" 为的是避免多次点击左下角歌曲封面的时候出现蓝色选中效果 -->
     <div class="img-wrap el-icon-arrow-up" @click="toSongDetail()" title="打开音乐详情页" onselectstart="return false"> 
-        <img :src="globalMusicInfo.imgUrl ? globalMusicInfo.imgUrl : defaultImg" alt="">
+        <img :src="globalMusicInfo.imgUrl ? $store.state.baseURL+globalMusicInfo.imgUrl : defaultImg" alt="">
     </div>
     <div class="music-info" v-show="globalMusicInfo.songName">
         <span class="music-name" :title="globalMusicInfo.songName">{{globalMusicInfo.songName}}</span>
@@ -32,6 +33,7 @@
     <!-- </el-tooltip> -->
 
   </div>
+</transition>
 </template>
 
 <script scoped>
