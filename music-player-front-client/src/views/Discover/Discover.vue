@@ -3,7 +3,7 @@
         <div class="Carousel">
             <el-carousel :interval="3000" type="card" height="250px">
                 <el-carousel-item v-for="(item,index) in banners" :key="index">
-                    <img class="item-img" :src="item.pic" :alt="item.id" width="100%" height="100%" >
+                    <img class="item-img" :src="$store.state.baseURL+item.pic" :alt="item.id" width="100%" height="100%" >
                 </el-carousel-item>
             </el-carousel>            
         </div>
@@ -12,7 +12,7 @@
             <div class="list">
                 <ul>
                     <li class="iconfont icon-play" v-for="(item,index) in recommendList" :key="index" @click="toPlaylistDetail(item.id)">
-                        <img v-lazy="item.img" alt="recommend">
+                        <img v-lazy="$store.state.baseURL+item.img" alt="recommend">
                         <p class="last-p" :title="item.title">{{item.title}}</p>
                     </li>                                                                                                                    
                 </ul>
@@ -23,7 +23,7 @@
             <ul class="new-songs">
                 <li v-for="(item,index) in newSongs" :key="index">
                     <div class="music-img-wrap">
-                        <img v-lazy="item.song.img" alt="newSongs">
+                        <img v-lazy="$store.state.baseURL+item.song.img" alt="newSongs">
                         <p class="iconfont icon-play" @click="playMusic(item)"></p>
                     </div>
 

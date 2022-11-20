@@ -1,55 +1,31 @@
 import request from './request'
-import store from '../store/index'
-
-export function getNewSongsAPI(params){
-    return request({
-        url:'/top/song',
-        method:'get',
-        headers: {
-            token: store.state.token
-        },
-        params
-    })
-}
 
 export function playMusicAPI(id){
     return request({
         url:`/song/${id}`,
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })
 }
 
 export function bannerAPI(){
     return request({
-        url:'/banner',
+        url:'/banner/',
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })
 }
 
 export function recommendSonglistAPI(style){
     return request({
-        url:`/sheet${style}`,
+        url:`/sheet/${style}`,
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })
 }
 
 
 export function recommendSongAPI(){
     return request({
-        url:'/song',
+        url:'/song/',
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })
 }
 
@@ -63,7 +39,7 @@ export function loginAPI(params) {
 
 export function registerAPI(params) {
     return request({
-        url: "​/client​/register",
+        url: "/client/register",
         method: 'post',
         params
     })
@@ -71,10 +47,10 @@ export function registerAPI(params) {
 
 export function putCommentAPI(params) {
     return request({
-        url: "​/sheetComment",
+        url: "/sheetComment/",
         method: 'post',
         headers: {
-            token: store.state.token
+            token: localStorage.getItem('token')
         },
         params
     })
@@ -82,12 +58,43 @@ export function putCommentAPI(params) {
 
 export function addToCollectionAPI(params) {
     return request({
-        url: "/myListContain",
+        url: '/myListContain/',
         method: 'post',
         headers: {
-            token: store.state.token
+            token: localStorage.getItem('token')
         },
         params
+    })
+}
+
+export function createListAPI(id,sheet) {
+    return request({
+        url: `/mySheet/${id}`,
+        method: 'post',
+        headers: {
+            token: localStorage.getItem('token')
+        },
+        params: {...sheet}
+    })
+}
+
+export function dropFromCollectionAPI(params) {
+    return request({
+        url: `/myListContain/${params.cid}/${params.sid}/1`,
+        method: 'delete',
+        headers: {
+            token: localStorage.getItem('token')
+        },
+    })
+}
+
+export function myCollectionAPI(id){
+    return request({
+        url:`/myListContain/${id}/1`,
+        method:'get',
+        headers: {
+            token: localStorage.getItem('token')
+        },
     })
 }
 
@@ -95,9 +102,6 @@ export function singerAPI(params){
     return request({
         url:`/singer/${params}`,
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })
 }
 
@@ -106,9 +110,6 @@ export function playlistDetailAPI(params){
     return request({
         url:`/sheetContain/pre/${params}`,
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })    
 }
 
@@ -116,9 +117,6 @@ export function songInfoAPI(params){
     return request({
         url:"/song/detail",
         method:'get',
-        headers: {
-            token: store.state.token
-        },
         params
     })      
 }
@@ -127,9 +125,6 @@ export function commentsAPI(params){
     return request({
         url:`/sheetComment/${params}`,
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })
 }
 
@@ -137,9 +132,6 @@ export function searchAPI(params,key){
     return request({
         url:`/${params}/search/${key}`,
         method:'get',
-        headers: {
-            token: store.state.token
-        },
     })      
 }
 
@@ -147,9 +139,6 @@ export function singerSongsAPI(id) {
     return request({
         url: `/song/withSinger/${id}`,
         method: 'get',
-        headers: {
-            token: store.state.token
-        },
     })
 }
 
@@ -158,27 +147,37 @@ export function userInfoAPI(id) {
         url: `/client/${id}`,
         method: 'get',
         headers: {
-            token: store.state.token
+            token: localStorage.getItem('token')
         },
     })
 }
 
 export function userSongsAPI(id) {
     return request({
-        url: `/mysheet/${id}`,
+        url: `/mySheet/${id}`,
         method: 'get',
         headers: {
-            token: store.state.token
+            token: localStorage.getItem('token')
+        },
+    })
+}
+
+export function addToListAPI(p) {
+    return request({
+        url: `/sheetContain/${p.id}/${p.singerName}/${p.songName}`,
+        method: 'post',
+        headers: {
+            token: localStorage.getItem('token')
         },
     })
 }
 
 export function changeInfoAPI(params) {
     return request({
-        url: `/client`,
+        url: `/client/`,
         method: 'put',
         headers: {
-            token: store.state.token
+            token: localStorage.getItem('token')
         },
         params
     })
@@ -189,7 +188,7 @@ export function dropSonglistAPI(params) {
         url: `/sheet/${params}`,
         method: 'delete',
         headers: {
-            token: store.state.token
+            token: localStorage.getItem('token')
         },
     })
 }

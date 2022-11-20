@@ -2,7 +2,7 @@
     <div class="playlist"  v-loading="loading">
         <div class="playlist-top-card">
             <div class="playlist-img-wrap">
-                <img :src="playlistInfo.img" alt="">
+                <img :src='playlistInfo.img' alt="">
             </div>
             <div style="margin-top: 50px;"> </div>
             <div class="playlist-info">
@@ -36,7 +36,7 @@
                             <el-table-column width="100">
                                 <template slot-scope="scope">
                                 <div class="img-wrap">
-                                    <img v-lazy="scope.row.img" alt="">
+                                    <img v-lazy="$store.state.baseURL+scope.row.img" alt="">
                                     <p class="iconfont icon-play"  @click="play(scope.row)"></p>                                
                                 </div>                                
                                 </template>
@@ -45,8 +45,24 @@
                             <el-table-column prop="songName" label="音乐标题" width=""></el-table-column>
 
                             <el-table-column label="歌手" width="">  
-                                {{playlistInfo.singerName}}                                                          
-                            </el-table-column>                            
+                                <template slot-scope="scope">
+                                    <span class="plus" style="top:20px;" title="收藏歌曲" @click="addToCollection(scope.row,$event)">+</span>
+                                    <span style="cursor:pointer;color:#2980b9;">{{playlistInfo.singerName}}</span>
+                                </template>                                                          
+                            </el-table-column>    
+                            <el-table-column width="">  
+                                <template slot-scope="scope">
+                                    <span style="top:20px;" title="添加到歌单">
+                                        <el-popover
+                                            placement="right"
+                                            width="100"
+                                            trigger="click">
+                                            <p v-for="(item,i) in getData" :key="i" @click="addToMyList(scope.row,i)">{{item.title}}</p>
+                                            <el-button slot="reference">添加到歌单</el-button>
+                                        </el-popover>
+                                    </span>
+                                </template> 
+                            </el-table-column>                         
                         </el-table>
                     </div>                    
                 </el-tab-pane>
@@ -58,7 +74,7 @@
 
 <script>
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
-import { singerSongsAPI } from '@/utils/api'
+import { singerSongsAPI,addToCollectionAPI,userSongsAPI,addToListAPI } from '@/utils/api'
 
 export default {
     data(){
@@ -75,7 +91,8 @@ export default {
             loadBegin:0,
             allData:[],
             showAddBall:false,
-            songList: []
+            songList: [],
+            getData: []
         }
     },
     components: {
@@ -105,6 +122,35 @@ export default {
         }        
     },
     methods:{
+        addToMyList(row,i){
+            console.log(row);
+            const params = {
+                id: this.getData[i].id,
+                singerName:this.playlistInfo.singerName,
+                songName: row.songName
+            }
+           
+            addToListAPI(params).then(()=>{
+                this.$message({
+                    showClose: true,
+                    message: '添加成功',
+                    type: 'success'
+                });
+            })
+        },
+        addToCollection(row) {
+            const params = {
+                clientId: localStorage.uid,
+                songId: row.song.id,
+                type: 1
+            }
+            addToCollectionAPI(params)
+            this.$message({
+                showClose: true,
+                message: '收藏成功',
+                type: 'success'
+            });
+        },
         toArtist(id){
             this.$router.push(`/artist?artistId=${id}`)
         },              
@@ -140,6 +186,7 @@ export default {
         getTableData(){
             singerSongsAPI(this.playlistId).then(res=>{
                 this.playlistInfo = res.data.data.singer
+                this.playlistInfo.img = this.$store.state.baseURL+this.playlistInfo.img
                 this.songList = res.data.data.songList
                 
                 Promise.all([this.getTracks(false)]).then(()=>{
@@ -148,6 +195,9 @@ export default {
 
             }).then(()=>{
                 this.loading = false
+            })
+            userSongsAPI(localStorage.uid).then(res=>{
+                this.getData = res.data.data.sheetList
             })
         },                
         getTracks(all=false){
@@ -163,14 +213,14 @@ export default {
         play(row){
             console.log(row)                
 
-            this.songUrl = row.song.url
+            this.songUrl = row.url
             
             let musicInfo = {
-                imgUrl:row.song.img,
+                imgUrl:row.img,
 
-                artistInfo:row.singer.singerName,
-                songName:row.song.songName,
-                id:row.song.id,
+                artistInfo:this.playlistInfo.singerName,
+                songName:row.songName,
+                id:row.id,
             }
 
             this.$store.commit("changeMusicUrl",this.songUrl)

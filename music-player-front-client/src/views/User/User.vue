@@ -13,7 +13,7 @@
     </div>
 
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="创建的歌单" name="album">
+      <el-tab-pane label="我的歌单" name="album">
         <ul class="albums">
           <li class="al-item" @click="toMyCollection">
             <div class="al-img-wrap">
@@ -21,29 +21,87 @@
               <img v-lazy="topInfo.picUrl" alt="">
             </div>
             <div class="al-name">我的收藏</div>
-            <!-- <router-link to="/user" style="text-decoration-line: none; "><div class="al-time" @click="drop(item.id)">删除歌单</div></router-link> -->
           </li>
 
-          <!-- <li class="al-item" v-for="(item,index1) in albumData" :key="index1">
+          <li class="al-item" v-for="(item,index1) in albumData" :key="index1">
             <div class="al-img-wrap">
               <p class="iconfont icon-play bofang"></p>
-              <img v-lazy="item.img" alt="" @click="toAlbum(item.id)">
+              <img v-lazy="$store.state.baseURL+item.img" alt="" @click="toAlbum(item.id)">
             </div>
             <div class="al-name" :title="item.title">{{item.title}}</div>
             <router-link to="/user" style="text-decoration-line: none; "><div class="al-time" @click="drop(item.id)">删除歌单</div></router-link>
-          </li> -->
+          </li>
         </ul>
+      </el-tab-pane>
+
+      <el-tab-pane label="新建歌单" name="create">
+        <div style="padding: 30px 600px 0 0">
+          <el-form label-position="left" label-width="80px" :model="putInfo">
+            <el-form-item label="歌单名">
+              <el-input v-model="createSonglist.title" placeholder="请输入歌单的名字"></el-input>
+            </el-form-item>
+            <el-form-item label="歌单简介">
+              <el-input v-model="createSonglist.intro" placeholder="请输入歌单的简介"></el-input>
+            </el-form-item>
+            <el-form-item label="歌曲风格">
+              <el-radio v-model="createSonglist.style" label="欧美">欧美</el-radio>
+              <el-radio v-model="createSonglist.style" label="华语">华语</el-radio>
+              <el-radio v-model="createSonglist.style" label="粤语">粤语</el-radio>
+              <el-radio v-model="createSonglist.style" label="日韩">日韩</el-radio>
+              <el-radio v-model="createSonglist.style" label="BGM">BGM</el-radio>
+              <el-radio v-model="createSonglist.style" label="轻音乐">轻音乐</el-radio>
+              <el-radio v-model="createSonglist.style" label="乐器">乐器</el-radio>
+            </el-form-item>
+          </el-form>
+          <center>
+            <div class="button">
+              <el-button type="success" plain @click="createList" size="medium">创建</el-button>
+            </div>
+          </center>
+        </div>
       </el-tab-pane>
       
       <el-tab-pane label="个人信息" name="private">
-        <!-- 个人信息的表单 -->
-        <div style="padding: 0 600px 0 0">
-          <el-form label-position="left" label-width="80px" :model="putInfo">
+        <div style="padding: 0 600px 0 0" class="info">
+          <el-descriptions v-if="!canChange" class="margin-top" title="我的信息" :column="2">
+            <template slot="extra">
+              <el-button type="primary" @click="showForm">修改</el-button>
+            </template>
+            <el-descriptions-item>
+              <template slot="label">
+                <i class="el-icon-user"></i>
+                用户名
+              </template>
+              {{info.username}}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                <i class="el-icon-mobile-phone"></i>
+                签名
+              </template>
+              {{info.signature}}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                <i class="el-icon-location-outline"></i>
+                电话
+              </template>
+              {{info.phone}}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                <i class="el-icon-office-building"></i>
+                邮箱
+              </template>
+              {{info.email}}
+            </el-descriptions-item>
+          </el-descriptions>
+          <el-form label-position="left" label-width="80px" :model="putInfo" v-if="canChange">
             <el-form-item label="用户名">
               <el-input v-model="putInfo.username" :placeholder="info.username"></el-input>
             </el-form-item>
             <el-form-item label="密码">
-              <el-input v-model="putInfo.password" :placeholder="info.password" show-password></el-input>
+              <el-input v-model="putInfo.password" show-password></el-input>
             </el-form-item>
             <el-form-item label="签名">
               <el-input v-model="putInfo.signature" :placeholder="info.signature"></el-input>
@@ -54,23 +112,24 @@
             <el-form-item label="邮箱">
               <el-input v-model="putInfo.email" :placeholder="info.email"></el-input>
             </el-form-item>
+            <center>
+              <div class="button">
+                <el-button type="success" plain @click="commit" size="medium">确认修改</el-button>
+                <el-button type="primary" plain @click="dontcommit" size="medium">取消修改</el-button>
+              </div>
+            </center>
           </el-form>
-          <center>
-            <div class="button">
-              <el-button type="success" plain @click="commit" size="medium">提交修改</el-button>
-            </div>
-          </center>
         </div>
       </el-tab-pane>
       
-      <el-tab-pane label="登出" name="logout">
+      <el-tab-pane label="退出登录" name="logout">
       </el-tab-pane>
     </el-tabs>        
   </div>
 </template>
 
 <script>
-import { userInfoAPI, userSongsAPI, changeInfoAPI, dropSonglistAPI } from '@/utils/api'
+import { userInfoAPI, userSongsAPI, changeInfoAPI, dropSonglistAPI, createListAPI } from '@/utils/api'
 
 export default {
   data(){
@@ -86,54 +145,124 @@ export default {
           loading:true,
           info: {},
           putInfo: {
+            id: '',
             username: '',
             password: '',
             signature: '',
             phone: '',
             email: '',
-          }
+          },
+          createSonglist: {
+            title: '',
+            intro: '',
+            style: ''
+          },
+          canChange: false
       }
   },
   created(){
-      this.artistId = this.$store.state.uid
+      this.artistId = localStorage.uid
       this.getAlbumData()
   },
   methods:{
+      showForm() {
+        this.canChange = ! this.canChange;
+      },
+      createList() {
+        for (let key in this.createSonglist) {
+          if(this.createSonglist[key] === '') {
+            this.$message({
+                showClose: true,
+                message: '提交的数据不能为空',
+                type: 'error'
+            });
+            return
+          }
+        }
+        console.log(this.createList);
+        createListAPI(localStorage.uid, this.createSonglist).then(res=>{
+          if(res.data.type === 'success') {
+            this.$message({
+                showClose: true,
+                message: '创建成功',
+                type: 'success'
+            });
+            
+            this.$router.go(0)
+          }
+        })
+      },
       toMyCollection() {
         this.$router.push('/collection')
       },
       drop(id) {
-        dropSonglistAPI(id)
+        this.$confirm('是否要删除该歌单?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              dropSonglistAPI(id).then(res => {
+                if(res.data.type === 'success') {
+                  this.$message({
+                    showClose: true,
+                    message: '删除成功',
+                    type: 'success'
+                  });
+                }
+                userSongsAPI(this.artistId).then(res => {
+                  this.albumData = res.data.data.sheetList
+                })
+              })
+              // this.$router.go(0)
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消'
+              });          
+            });
       },
       toAlbum(id) {
+        
         this.$router.push(`myplaylist?id=${id}`)
       },
       handleClick(tab) {
           this.loading = true
-          if(tab.label == "登出"){
-            this.$store.state.isLogin = false
-            this.$store.state.userImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
-            this.$message({
-                showClose: true,
-                message: '登出成功',
-                type: 'success'
+          if(tab.label == "退出登录"){
+            this.$confirm('将要退出登录, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              localStorage.setItem('isLogin', false)
+              this.$store.state.userImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+              this.$message({
+                  showClose: true,
+                  message: '登出成功',
+                  type: 'success'
+              });
+              this.$router.push('/discover')
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消'
+              });          
             });
-            this.$router.push('/login')
           }
-          setTimeout(() => {
-              this.loading = false
-          }, 500);
+          this.loading = false
+      },
+      dontcommit() {
+        this.canChange = !this.canChange
       },
       getAlbumData(){
         userInfoAPI(this.artistId).then(res=>{
               console.log(res)
               this.topInfo = {
                   name:res.data.data.username,
-                  picUrl:res.data.data.img,
+                  picUrl:this.$store.state.baseURL+res.data.data.img,
                   desc:res.data.data.signature,
               }
               this.info = res.data.data
-              this.$store.state.userImg = res.data.data.img
+              this.$store.state.userImg = this.$store.state.baseURL+res.data.data.img
           }).then(()=>{
               this.loading = false
         })
@@ -142,13 +271,29 @@ export default {
         })
       },   
       commit() {
+        this.putInfo.id = this.artistId
         for(let prop in this.putInfo) {
+          console.log(prop);
           if(this.putInfo[prop] === '') 
             delete this.putInfo[prop]
         }
         changeInfoAPI(this.putInfo).then(res => {
           if(res.data.message === '更新成功') {
-            alert('更新成功')
+            this.$message({
+                showClose: true,
+                message: '修改成功',
+                type: 'success'
+            });
+            userInfoAPI(this.artistId).then(res=>{
+              console.log(res)
+              this.topInfo = {
+                  name:res.data.data.username,
+                  picUrl:this.$store.state.baseURL+res.data.data.img,
+                  desc:res.data.data.signature,
+              }
+              this.info = res.data.data
+            })  
+            this.canChange = ! this.canChange
           }
         })
       }                     
@@ -170,6 +315,12 @@ export default {
 </script>
 
 <style scoped>
+.info .el-input__inner {
+  border: 1px solid #FFF;
+}
+.info input::placeholder {
+  color: black;
+}
 .artist-others {
   margin-top: 30px;
 }

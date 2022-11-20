@@ -24,6 +24,11 @@ import Queue from './components/Queue.vue'
 
 export default {
   name: 'App',
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
   components: {
     Top,
     Index,
@@ -34,7 +39,16 @@ export default {
   data(){
     return {
       show:true,
-      showQueue:false
+      showQueue:false,
+      isRouterAlive: true
+    }
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function() {
+        this.isRouterAlive = true
+      })
     }
   }
 }

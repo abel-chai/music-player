@@ -128,9 +128,11 @@ export default {
         },
         play(item){
             console.log(item)
-            playMusicAPI({id:item.id}).then(res=>{
-                if(res.data.data[0].url){
-                let songUrl = res.data.data[0].url
+            playMusicAPI(item.id).then(res=>{
+                console.log("res");
+                console.log(res);
+                if(res.data.data.url){
+                let songUrl = res.data.data.url
                 let musicInfo = {
                     id:item.id,
                     imgUrl:item.imgUrl,

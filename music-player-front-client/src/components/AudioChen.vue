@@ -1,7 +1,7 @@
 <template>
   <div class="audio-wrap">
     <audio
-        :src="musicUrl"
+        :src="$store.state.baseURL+musicUrl"
         controls 
         autoplay 
         ref="audio" 

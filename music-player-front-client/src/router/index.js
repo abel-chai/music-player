@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from "vue-router"
-import store from "../store/index"
+import {userInfoAPI} from '../utils/api.js'
+import store from '../store/index'
 
 Vue.use(VueRouter)
 
@@ -18,83 +19,80 @@ const routes = [
   {
     path: "/discover",
     component: () => import ('@/views/Discover/Discover.vue'),
-    meta: { keepAlive: true },
-    beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
-      isLogin ? next() : next('/login')
-    }
+    meta: { keepAlive: true }
+  },
+  {
+    path: "/blank",
+    component: () => import ('@/views/Blank/Blank.vue')
   },
   {
     path: "/recommend",
     component: () => import ('@/views/Recommend/Recommend.vue'),
-    meta: { keepAlive: true, },
-    beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
-      isLogin ? next() : next('/login')
-    }
+    meta: { keepAlive: true, }
   },
   {
     path: '/result',
-    component: () => import ('@/views/Result/Result.vue'),
-    beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
-      isLogin ? next() : next('/login')
-    }
+    component: () => import ('@/views/Result/Result.vue')
   },
   {
     path: '/playlist',
-    component: () => import ('@/views/Playlist/Playlist.vue'),
-    beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
-      isLogin ? next() : next('/login')
-    }
+    component: () => import ('@/views/Playlist/Playlist.vue')
   },
   {
     path: '/myplaylist',
     component: () => import ('@/views/MyPlaylist/MyPlaylist.vue'),
     beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
+      const isLogin = localStorage.getItem('isLogin')
+      isLogin ? next() : next('/login')
+    }
+  },
+  {
+    path: '/collection',
+    component: () => import ('@/views/Collection/Collection.vue'),
+    beforeEnter: (to, from, next) => {
+      const isLogin = localStorage.getItem('isLogin')
       isLogin ? next() : next('/login')
     }
   },
   {
     path: '/artist',
-    component: () => import ('@/views/Artist/Artist.vue'),
-    beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
-      isLogin ? next() : next('/login')
-    }
+    component: () => import ('@/views/Artist/Artist.vue')
   },
   {
     name: 'Login',
     path: '/login',
     component: () => import ('@/views/Login/Login.vue'),
     beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
-      isLogin ? next('/user') : next()
+      const { isLogin } = localStorage
+      if(isLogin == 'true') next('/user')
+      else next()
     }
   },
   {
     path: '/register',
     component: () => import ('@/views/Register/Register.vue'),
     beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
+      const isLogin = localStorage.getItem('isLogin')
       isLogin ? next('/user') : next()
     }
   },
   {
     path: '/singer',
-    component: () => import ('@/views/FindSinger/FindSinger.vue'),
-    beforeEnter: (to, from, next) => {
-      const isLogin = store.state.isLogin
-      isLogin ? next() : next('/login')
-    }
+    component: () => import ('@/views/FindSinger/FindSinger.vue')
   },
   {
     path: '/user',
     component: () => import ('@/views/User/User.vue'),
     beforeEnter: (to, from, next) => {
-      store.state.isLogin ? next() : next({name: 'Login'})
+      const { isLogin } = localStorage;
+      if(isLogin === 'true') {
+        console.log("到/user");
+        next() 
+      }
+      else {
+        console.log("到/login");
+        next({name: 'Login'})
+      }
     }
   }
 ]
@@ -102,6 +100,17 @@ const routes = [
 const router = new VueRouter({
   routes,
   // mode: 'history'
+})
+
+router.beforeEach((to, from, next) => {
+  const { isLogin, uid } = localStorage;
+  console.log(uid);
+  if(isLogin === 'true') {
+    userInfoAPI(uid).then(res=>{
+      store.state.userImg = store.state.baseURL+res.data.data.img
+    })
+  }
+  next()
 })
 
 export default router

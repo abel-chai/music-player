@@ -5,7 +5,7 @@
       <!-- <span class="title">&nbsp;&nbsp;登录</span> -->
     </div>
     <div class="input">
-      <el-input placeholder="请输入账号" v-model="putData.name"></el-input>
+      <el-input placeholder="请输入账号" v-model="putData.username"></el-input>
       <div style="margin-bottom: 30px;"></div>
       <el-input placeholder="请输入密码" v-model="putData.password" show-password></el-input>
     </div>
@@ -25,14 +25,14 @@ export default {
   data() {
     return {
       putData: {
-        name: '',
+        username: '',
         password: ''  
       }
     }
   },
   methods: {
     commit() {
-      if(this.putData.name === '' || this.putData.password === '') {
+      if(this.putData.username === '' || this.putData.password === '') {
         alert("格式错误")
       }
       else registerAPI(this.putData)
@@ -49,7 +49,7 @@ export default {
   border-radius: 30px;
   border-top: 1px solid #e8e8e8;
   background: url(../../assets/imgs/moka.png) no-repeat;
-  background-size: 30%;
+  background-size: 40%;
   background-position: bottom right;
   box-shadow: 0 5px 6px rgba(0, 0, 0,.3);
 }
@@ -62,7 +62,7 @@ export default {
   height: 80px;
 }
 .input {
-  margin: 50px auto;
+  margin: 50px 150px;
   width: 400px;
 }
 .text {
