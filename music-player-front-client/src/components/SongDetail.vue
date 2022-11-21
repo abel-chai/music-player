@@ -181,7 +181,7 @@ export default {
         /* height: 100%;
         z-index: 1; */
 
-        background: linear-gradient(to right top, #913f36, #87160a);
+        background: linear-gradient(to right top, #445469, #2a3441);
         /* background: linear-gradient(to left top, rgb(133, 68, 62), rgb(181, 97, 131)); */
         position: fixed;
         top: 100%;

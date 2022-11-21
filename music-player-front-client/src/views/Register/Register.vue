@@ -5,9 +5,9 @@
       <!-- <span class="title">&nbsp;&nbsp;登录</span> -->
     </div>
     <div class="input">
-      <el-input placeholder="请输入账号" v-model="putData.username"></el-input>
+      <el-input placeholder="请输入3~16位的用户名，以字母开头" v-model="putData.username"></el-input>
       <div style="margin-bottom: 30px;"></div>
-      <el-input placeholder="请输入密码" v-model="putData.password" show-password></el-input>
+      <el-input placeholder="请输入6~16位密码，不能包含特殊字符" v-model="putData.password" show-password></el-input>
     </div>
     <div class="button">
       <el-button type="danger" plain @click="commit">注册</el-button>
@@ -32,14 +32,33 @@ export default {
   },
   methods: {
     commit() {
+      const reg1 = /^[a-zA-Z][a-zA-Z0-9_]{3,15}$/;
+      const reg2 = /\w{5,17}$/
       if(this.putData.username === '' || this.putData.password === '') {
         this.$message({
-          type:'error',
-          message:'请输入正确的数据',
+          type:'info',
+          message:'输入不能为空',
           showClose:true
         })
+        return
       }
-      else registerAPI(this.putData).then(()=>{
+      if(!reg1.test(this.putData.username)) {
+        this.$message({
+              showClose: true,
+              message: '请输入合法的账号',
+              type: 'info'
+          });
+          return
+      }
+      if(!reg2.test(this.putData.password)) {
+        this.$message({
+              showClose: true,
+              message: '请输入合法的密码',
+              type: 'info'
+          });
+          return
+      }
+      registerAPI(this.putData).then(()=>{
         this.$message({
           type:'success',
           message:'注册成功',

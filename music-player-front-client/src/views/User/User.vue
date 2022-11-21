@@ -122,14 +122,18 @@
         </div>
       </el-tab-pane>
       
-      <el-tab-pane label="退出登录" name="logout">
+      <el-tab-pane label="账号操作" name="logout">
+        <div>
+            <el-button type="warning" @click="logOut">退出登录</el-button>
+            <el-button type="danger" @click="deleteAccount">注销账号</el-button>
+        </div>
       </el-tab-pane>
     </el-tabs>        
   </div>
 </template>
 
 <script>
-import { userInfoAPI, userSongsAPI, changeInfoAPI, dropSonglistAPI, createListAPI } from '@/utils/api'
+import { userInfoAPI, userSongsAPI, changeInfoAPI, dropSonglistAPI, createListAPI, deleteAccountAPI } from '@/utils/api'
 
 export default {
   data(){
@@ -165,6 +169,19 @@ export default {
       this.getAlbumData()
   },
   methods:{
+      deleteAccount() {
+        deleteAccountAPI(localStorage.uid).then(()=>{
+          localStorage.setItem('isLogin', false)
+              this.$store.state.isLogin = false
+              this.$store.state.userImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+              this.$message({
+                  showClose: true,
+                  message: '账号注销成功',
+                  type: 'success'
+              });
+              this.$router.push('/discover')
+        })
+      },
       showForm() {
         this.canChange = ! this.canChange;
       },
@@ -226,14 +243,20 @@ export default {
         this.$router.push(`myplaylist?id=${id}`)
       },
       handleClick(tab) {
-          this.loading = true
-          if(tab.label == "退出登录"){
+        if(tab.label != '个人信息') {
+          this.canChange = false
+        }
+          
+      },
+      logOut() {
+        this.loading = true
             this.$confirm('将要退出登录, 是否继续?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
               localStorage.setItem('isLogin', false)
+              this.$store.state.isLogin = false
               this.$store.state.userImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
               this.$message({
                   showClose: true,
@@ -247,7 +270,6 @@ export default {
                 message: '已取消'
               });          
             });
-          }
           this.loading = false
       },
       dontcommit() {
@@ -275,11 +297,53 @@ export default {
         })
       },   
       commit() {
+        const regs= {
+          id: /\w+/,
+          username:  /^[a-zA-Z][a-zA-Z0-9_]{3,15}$/,
+          password:  /\w{5,17}$/,
+          signature: /\w*/,
+          phone: /^1[3|4|5|7|8]\d{9}$/,
+          email: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+        }
         this.putInfo.id = this.artistId
         for(let prop in this.putInfo) {
           console.log(prop);
-          if(this.putInfo[prop] === '') 
+          if(this.putInfo[prop] === '' && prop != 'id')  {
             delete this.putInfo[prop]
+            continue
+          }
+          else {
+            if(!regs[prop].test(this.putInfo[prop])) {
+              if(prop == 'username'){
+                this.$message({
+                  type:'info',
+                  message:'请输入正确的用户名',
+                  showClose:true
+                })
+              }
+              else if(prop == 'password'){
+                this.$message({
+                  type:'info',
+                  message:'请输入正确的密码',
+                  showClose:true
+                })
+              }
+              else if(prop == 'phone'){
+                this.$message({
+                  type:'info',
+                  message:'请输入正确的手机号',
+                  showClose:true
+                })
+              }
+              else if(prop == 'email'){
+                this.$message({
+                  type:'info',
+                  message:'请输入正确的邮箱',
+                  showClose:true
+                })
+              }
+            }
+          }
         }
         changeInfoAPI(this.putInfo).then(res => {
           if(res.data.message === '更新成功') {

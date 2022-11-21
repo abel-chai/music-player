@@ -37,6 +37,16 @@ export function loginAPI(params) {
     })
 }
 
+export function deleteAccountAPI(id) {
+    return request({
+        url: `/client/${id}`,
+        method: 'delete',
+        headers: {
+            token: localStorage.getItem('token')
+        },
+    })
+}
+
 export function registerAPI(params) {
     return request({
         url: "/client/register",
@@ -162,6 +172,7 @@ export function userSongsAPI(id) {
     })
 }
 
+
 export function addToListAPI(p) {
     return request({
         url: `/sheetContain/${p.id}/${p.singerName}/${p.songName}`,
@@ -186,6 +197,16 @@ export function changeInfoAPI(params) {
 export function dropSonglistAPI(params) {
     return request({
         url: `/sheet/${params}`,
+        method: 'delete',
+        headers: {
+            token: localStorage.getItem('token')
+        },
+    })
+}
+
+export function dropFromSonglistAPI(params) {
+    return request({
+        url: `/sheetContain/${params.sheetId}/${params.songId}`,
         method: 'delete',
         headers: {
             token: localStorage.getItem('token')

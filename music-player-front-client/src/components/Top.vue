@@ -18,8 +18,18 @@
       </el-input>
     </div>
     <router-link to="/login">
-      <el-avatar :size="40" class="avatar" :src="$store.state.userImg" />
+      
     </router-link>
+    <el-dropdown class="avatar" trigger="click" @command="handleCommand">
+      <span class="el-dropdown-link">
+        <el-avatar :size="40" class="avatar" :src="$store.state.userImg" style='top:-30px;right:0;'/>
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="a" v-if="$store.state.isLogin===true">个人主页</el-dropdown-item>
+        <el-dropdown-item command="b" v-if="$store.state.isLogin===true">退出登录</el-dropdown-item>
+        <el-dropdown-item command="c" v-if="$store.state.isLogin!=true">去登录</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
     <div class="search-hot" v-show="showHot" ref="hot" @mousedown.stop="prevent">
       <span class="hot-title" style="display: inline-block;margin-right: 5px;">搜索历史</span>
       <span class="iconfont icon-lajitong" style="cursor:pointer" title="清空搜索历史" @mousedown="deleteHistory(0,true)"></span>
@@ -44,10 +54,36 @@ export default {
       searchValue:"",
       showHot:false,
       hotData:[],
-      history:[]
+      history:[],
     }
   },
   methods:{
+    handleCommand(command) {
+      if(localStorage.isLogin==='false') {
+        this.$message({
+          type: 'info',
+          message: '请先登录'
+        });    
+      }
+      if(command==='a') {
+        this.$router.push('/user')
+      } else if(command === 'b') {
+        localStorage.isLogin='false'
+        localStorage.token=''
+        this.$store.state.isLogin = false
+        this.$store.state.userImg = 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+              
+        this.$router.push('/')
+        
+        this.$message({
+          showClose: true,
+          message: '登出成功',
+          type: 'success'
+        });
+      } else {
+        this.$router.push('/login')
+      }
+    },
     search(){
       // alert(this.searchValue)
       if(this.isNull(this.searchValue))
@@ -75,6 +111,7 @@ export default {
       this.$router.go(n)
     },
     getSearchHot(){
+      this.searchValue = ''
       this.showHot=true
     },
     toHot(value){
@@ -148,6 +185,10 @@ export default {
 
 .el-input__icon {
   color: #818185dc;
+}
+
+.el-dropdown {
+  position: absolute !important;
 }
 
 .search-hot {
@@ -242,7 +283,7 @@ export default {
 .avatar {
   display: flex;
   position: absolute;
-  top: 10px;
+  top: 40px;
   right: 30px;
 }
 </style>

@@ -114,6 +114,9 @@ router.beforeEach((to, from, next) => {
       store.state.userImg = store.state.baseURL+res.data.data.img
     })
   }
+  else {
+    store.state.userImg='https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+  }
   next()
 })
 

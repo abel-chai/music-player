@@ -250,20 +250,18 @@ export default {
             this.$store.commit("changeNowIndex",ids.indexOf(musicInfo.id))
         },        
         playAll(){
-            let allSongs = this.allData
+            let allSongs = this.tableData
+            console.log(allSongs);
             this.$store.commit('clearMusicQueue')
             for (const item of allSongs) {
                 let obj = {
-                    duration:item.dt,
                     id:item.id,
-                    imgUrl:item.al.picUrl,
-                    artistInfo:item.ar,
-                    // singer:item.ar[0].name,
-                    songName:item.name
+                    imgUrl:item.img,
+                    artistInfo:this.playlistInfo.singerName,
+                    songName:item.songName
                 }
                 this.$store.commit('changeMusicQueue',obj)
             }
-            // 若第一首歌无版权无法播放，会出现bug，自动播放也是
             this.$store.commit('changeNowIndex',0)
             this.play(allSongs[0])
         }

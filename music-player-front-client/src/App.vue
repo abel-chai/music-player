@@ -89,7 +89,7 @@ export default {
   .index {
     position: fixed;
     top: 60px;
-    bottom: 70px;
+    bottom: 0;
     left: 0;
     right: 0;
   }

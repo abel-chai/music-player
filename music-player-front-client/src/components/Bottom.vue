@@ -1,6 +1,14 @@
 <template>
+    <div>
+    <div class="fold">
+    <!-- <i class="el-icon-download"></i> -->
+    <img src="../assets/imgs/down.png" height="30px" width="30px" @click="flag = !flag">
+    <!-- <yin-icon :icon="iconList.ZHEDIE" ></yin-icon> -->
+    </div>
 <transition name="el-zoom-in-bottom">
-  <div class="bottom">
+    
+<div class="bottom" v-show="flag">
+    
     <div class="music-box">
     <!-- onselectstart="return false" 为的是避免多次点击左下角歌曲封面的时候出现蓝色选中效果 -->
     <div class="img-wrap el-icon-arrow-up" @click="toSongDetail()" title="打开音乐详情页" onselectstart="return false"> 
@@ -32,8 +40,9 @@
     </div>
     <!-- </el-tooltip> -->
 
-  </div>
+</div>
 </transition>
+</div>
 </template>
 
 <script scoped>
@@ -44,6 +53,7 @@ export default {
             defaultImg: require("@/assets/imgs/defaultImg.png"),
             musicUrl:"",
             currentTime:0,
+            flag: true
         }
     },
     components:{
@@ -72,14 +82,13 @@ export default {
         }
     },
     mounted(){
-        this.changeQueuePostion()
+        // this.changeQueuePostion()
 
-        window.onresize = () => this.changeQueuePostion()
+        // window.onresize = () => this.changeQueuePostion()
     },
     methods:{
         changeQueuePostion() {
             if(this.$refs.queue.getBoundingClientRect){
-                // console.log(that.$refs.queue.getBoundingClientRect())
                 let pos = {
                     top:Math.floor(this.$refs.queue.getBoundingClientRect().top),
                     left:Math.floor(this.$refs.queue.getBoundingClientRect().left)
@@ -187,7 +196,21 @@ export default {
 </script>
 
 <style>
-
+    .turn {
+    transform: rotate(180deg);
+    }
+    .show {
+    bottom: -70px;
+    }
+    .hidden{
+    bottom: 0px;
+    }
+    .fold {
+    position: absolute;
+    bottom: 70px;
+    left: 10px;
+    cursor: pointer;
+    }
     .add-queue-style{
         animation-name: addAni;
         animation-duration: .3s;

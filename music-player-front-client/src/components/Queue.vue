@@ -52,43 +52,27 @@ export default {
             this.$router.push(`/artist?artistId=${id}`)
         },         
         deleteQueue(id){
-            //   console.log(id)
-            this.$confirm('确定删除该歌曲吗?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                let ids = []
-                for (const item of this.musicQueue) {
-                    ids.push(item.id)
-                }
-                let ii = ids.indexOf(id)
+            let ids = []
+            for (const item of this.musicQueue) {
+                ids.push(item.id)
+            }
+            let ii = ids.indexOf(id)
 
-                setTimeout(() => {
-                    this.$store.commit('changeQueueStyle','delete') 
-                    this.$store.commit('deleteMusic',id)
-                    if(ii < this.nowIndex){
-                        this.$store.commit('changeNowIndex',this.nowIndex-1)          
-                    }else if(ii== this.nowIndex){
-                        this.$store.commit('deleteToNext')
-                    }     
-                }, 300);
+            setTimeout(() => {
+                this.$store.commit('changeQueueStyle','delete') 
+                this.$store.commit('deleteMusic',id)
+                if(ii < this.nowIndex){
+                    this.$store.commit('changeNowIndex',this.nowIndex-1)          
+                }else if(ii== this.nowIndex){
+                    this.$store.commit('deleteToNext')
+                }     
+            }, 300);
 
 
-                setTimeout(() => {
-                    this.$store.commit('changeQueueStyle','normal')                   
-                }, 1000);
+            setTimeout(() => {
+                this.$store.commit('changeQueueStyle','normal')                   
+            }, 1000);
 
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
-            }).catch(() => {
-                this.$message({
-                type: 'info',
-                message: '已取消删除'
-                });          
-            });
         },
         clearMusicQueue(){
             if(this.musicQueue.length == 0)
