@@ -9,7 +9,7 @@
                 <div class="playlist-name">
                     <div class="tag1">歌单</div>{{playlistInfo.title}}
                 </div>
-                <div class="playAllBtn iconfont icon-play"> 播放全部</div>
+                <div class="playAllBtn iconfont icon-play" @click="playAll"> 播放全部</div>
                 <div class="playlist-tags">
                     <span>标签：</span>
                     <span  class="tags">{{playlistInfo.style}}</span>
@@ -163,6 +163,30 @@ export default {
         }        
     },
     methods:{
+        playAll(){
+            let allSongs = this.tableData
+            console.log('allSongs');
+            console.log(allSongs);
+            this.$store.commit('clearMusicQueue')
+            if(allSongs.length === 0) {
+                this.$message({
+                type: 'info',
+                message: '你的歌单中还没有歌曲'
+              });  
+              return
+            }
+            for (const item of allSongs) {
+                let obj = {
+                    id:item.song.id,
+                    imgUrl:item.song.img,
+                    artistInfo:item.singer.singerName,
+                    songName:item.song.songName
+                }
+                this.$store.commit('changeMusicQueue',obj)
+            }
+            this.$store.commit('changeNowIndex',0)
+            this.play(allSongs[0])
+        },  
         addToMyList(row,i){
             const params = {
                 id: this.getData[i].id,

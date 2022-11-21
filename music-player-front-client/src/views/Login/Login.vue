@@ -31,10 +31,37 @@ export default {
   },
   methods: {
     commit() {
+      const reg1 = /^[a-zA-Z][a-zA-Z0-9_]{3,15}$/;
+      const reg2 = /\w{5,17}$/
+      if(this.uname === '' || this.pword === '') {
+        this.$message({
+              showClose: true,
+              message: '内容不能为空',
+              type: 'info'
+          });
+          return
+      }
+      if(!reg1.test(this.uname)) {
+        this.$message({
+              showClose: true,
+              message: '请输入合法的账号',
+              type: 'info'
+          });
+          return
+      }
+      if(!reg2.test(this.pword)) {
+        this.$message({
+              showClose: true,
+              message: '请输入合法的密码',
+              type: 'info'
+          });
+          return
+      }
       loginAPI({name: this.uname, password: this.pword}).then(res=>{
         if(res.data.type == "success") {
           localStorage.isLogin = true
-          localStorage.token = this.$store.state.token
+          localStorage.token = res.data.data.token
+          this.$store.state.isLogin = true
           this.$router.push('/user')
           this.$message({
               showClose: true,
@@ -49,7 +76,6 @@ export default {
           });
           return
         }
-        this.$store.state.token = res.data.data.token
         this.type = res.data.type
         localStorage.uid = res.data.data.id
         

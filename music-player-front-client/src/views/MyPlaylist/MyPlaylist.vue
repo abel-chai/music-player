@@ -9,9 +9,9 @@
               <div class="playlist-name">
                   <div class="tag1">歌单</div>{{playlistInfo.title}}
               </div>
-              <div class="playAllBtn iconfont icon-play"> 播放全部</div>
+              <div class="playAllBtn iconfont icon-play" @click="playAll"> 播放全部</div>
               <div class="playlist-tags">
-                  <span>标签：</span>
+                  <span>&nbsp;</span>
                   <span  class="tags">{{playlistInfo.style}}</span>
               </div>
               <div class="playlist-desc">
@@ -48,9 +48,16 @@
                           <el-table-column prop="singer.singerName" label="歌手" width="">  
                               <template slot-scope="scope">
                                   <span style="cursor:pointer;color:#2980b9;" @click="$router.push(`/artist?artistId=${scope.row.singer.id}`)">{{scope.row.singer.singerName}}</span>                                                          
-                                  <!-- <span class="plus" title="从歌单中移除" @click="dropFromCollection(scope.row,$event)" style="top:20px;color:red;">❤</span> -->
                               </template>
-                          </el-table-column>                            
+                          </el-table-column> 
+                          
+                          <el-table-column width="" label="操作">  
+                                <template slot-scope="scope">
+                                    <span style="top:20px;margin-left: -10px;" title="从歌单中删除">
+                                        <el-button slot="reference" @click="addToMyList(scope.row)">删除</el-button>
+                                    </span>
+                                </template> 
+                            </el-table-column>  
                       </el-table>
                   </div>                    
               </el-tab-pane>
@@ -62,7 +69,7 @@
 <script>
 import {formatDateFully} from '../../utils/utils'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
-import { playlistDetailAPI,commentsAPI,putCommentAPI } from '@/utils/api'
+import { playlistDetailAPI,commentsAPI,putCommentAPI,dropFromSonglistAPI } from '@/utils/api'
 
 export default {
   data(){
@@ -112,11 +119,21 @@ export default {
       }        
   },
   methods:{
-      //todo
-      dropFromCollection() {
-          
-      },
-      //todo,传入用户id、歌单id和评论内容
+    addToMyList(row){
+            const params = {
+                sheetId:this.playlistId,
+                songId:row.song.id
+            }
+            dropFromSonglistAPI(params).then(()=>{
+                this.$router.go(0)  
+            }).then(()=>{
+                this.$message({
+                    showClose: true,
+                    message: '移除成功',
+                    type: 'success'
+                });
+            })
+        },
       commit() {
           console.log(this.textarea);
           putCommentAPI({
@@ -171,7 +188,30 @@ export default {
           }).then(()=>{
               this.loading = false
           })
-      },                
+      },    
+      playAll(){
+            let allSongs = this.tableData
+            console.log(allSongs);
+            this.$store.commit('clearMusicQueue')
+            if(allSongs.length === 0) {
+                this.$message({
+                type: 'info',
+                message: '你的歌单中还没有歌曲'
+              });  
+              return
+            }
+            for (const item of allSongs) {
+                let obj = {
+                    id:item.song.id,
+                    imgUrl:item.song.img,
+                    artistInfo:item.singer.singerName,
+                    songName:item.song.songName
+                }
+                this.$store.commit('changeMusicQueue',obj)
+            }
+            this.$store.commit('changeNowIndex',0)
+            this.play(allSongs[0])
+        },            
       getTracks(all=false){
           let pushList = []
           pushList = this.songList
@@ -341,7 +381,7 @@ export default {
   }
 
   .playlist-tags {
-      margin: 10px 0;
+      margin: 5px 0;
   }
 
   .playlist-desc {

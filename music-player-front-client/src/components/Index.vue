@@ -23,7 +23,9 @@
       <main>
           <el-scrollbar style="height:100%">
             <slot></slot>
+            <div style="height:70px;width: 100%;"></div>
           </el-scrollbar>
+          
       </main>
   </div>
 </template>
